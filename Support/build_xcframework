@@ -23,7 +23,7 @@ set -o pipefail
 # Scirpt that prepares PactSwift.xcframework
 
 # Properties
-IPHONEOS_DEPLOYMENT_TARGET=16.0
+IPHONEOS_DEPLOYMENT_TARGET=13.0
 MACOSX_DEPLOYMENT_TARGET=13.0
 
 TMP_DIR="./.tmp/build-xcframework"
@@ -42,14 +42,6 @@ XCBEAUTIFY=$(command -v xcbeautify || command -v cat)
 
 echo "⚠️ Checking for the right Xcode tools..."
 xcode-select -p && xcode-select -v
-
-echo "🚨 Are you running this using Xcode 14.x tools!? It should be 14.x!"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes) break;;
-        No) exit 1;;
-    esac
-done
 
 # Setup
 
@@ -83,7 +75,7 @@ echo "👍  Framework for arm64 device built"
 echo "🏗  Building for iOS Simulator..."
 xcodebuild archive \
     -sdk iphonesimulator IPHONEOS_DEPLOYMENT_TARGET=${IPHONEOS_DEPLOYMENT_TARGET} \
-    -arch x86_64 -arch arm64 \
+    -arch arm64 \
     -scheme "${PRODUCT_NAME}-iOS" \
     -archivePath "${TMP_DIR}/iphonesimulator/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
@@ -95,7 +87,7 @@ echo "👍  Framework for iOS Simulator built for x86_64 and arm64 architecture"
 echo "🏗  Building for macOS..."
 xcodebuild archive \
     -sdk macosx MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} \
-    -arch x86_64 -arch arm64 \
+    -arch arm64 \
     -scheme "${PRODUCT_NAME}-macOS" \
     -archivePath "${TMP_DIR}/macos/${PRODUCT_NAME}.xcarchive" \
     BUILD_LIBRARY_FOR_DISTRIBUTION=YES \

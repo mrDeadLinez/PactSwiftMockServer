@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14A5C0832D776627003ECE55 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A5C0822D776618003ECE55 /* libbz2.tbd */; };
+		14A5C0842D776636003ECE55 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 143FEB542D77658A00D9E174 /* libbz2.tbd */; };
+		14A5C0852D776640003ECE55 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A5C0822D776618003ECE55 /* libbz2.tbd */; };
 		A743EC3F2946E8C700EE315D /* Pact.swift in Sources */ = {isa = PBXBuildFile; fileRef = A743EC3E2946E8C700EE315D /* Pact.swift */; };
 		A743EC402946E8C700EE315D /* Pact.swift in Sources */ = {isa = PBXBuildFile; fileRef = A743EC3E2946E8C700EE315D /* Pact.swift */; };
 		A743EC412946E8C700EE315D /* Pact.swift in Sources */ = {isa = PBXBuildFile; fileRef = A743EC3E2946E8C700EE315D /* Pact.swift */; };
@@ -99,6 +102,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		143FEB542D77658A00D9E174 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		14A5C0822D776618003ECE55 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/usr/lib/libbz2.tbd; sourceTree = DEVELOPER_DIR; };
 		A743EC3E2946E8C700EE315D /* Pact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pact.swift; sourceTree = "<group>"; };
 		A743EC422946EF1D00EE315D /* Interaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interaction.swift; sourceTree = "<group>"; usesTabs = 1; };
 		A75EC3AC2942B2FB0054BADB /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
@@ -165,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD63D08F26A02C64002682EB /* libpact_ffi.a in Frameworks */,
+				14A5C0852D776640003ECE55 /* libbz2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14A5C0842D776636003ECE55 /* libbz2.tbd in Frameworks */,
 				AD3192DE2BD3A12000A6C2AC /* SystemConfiguration.framework in Frameworks */,
 				AD3771212BD387E700206BF2 /* libpact_ffi.a in Frameworks */,
 			);
@@ -198,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD63D08226A02C28002682EB /* libpact_ffi.a in Frameworks */,
+				14A5C0832D776627003ECE55 /* libbz2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +360,8 @@
 		AD3192DC2BD3A12000A6C2AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				143FEB542D77658A00D9E174 /* libbz2.tbd */,
+				14A5C0822D776618003ECE55 /* libbz2.tbd */,
 				AD3192DD2BD3A12000A6C2AC /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
