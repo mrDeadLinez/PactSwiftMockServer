@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.9.10 clang-1600.0.26.2)
-// swift-module-flags: -target arm64-apple-macos13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name PactSwiftMockServer
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface
+// swift-compiler-version: Apple Swift version 6.2 effective-5.10 (swiftlang-6.2.0.19.9 clang-1700.3.19.1)
+// swift-module-flags: -target arm64-apple-macos13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name PactSwiftMockServer
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2
 import Foundation
 @_exported import PactSwiftMockServer
 import Swift
@@ -84,7 +84,9 @@ extension PactSwiftMockServer.PactVerificationFailure.Mismatch.MismatchType : Sw
   public typealias RawValue = Swift.String
 }
 extension PactSwiftMockServer.PactVerificationFailure.FailureType : Swift.RawRepresentable, Swift.Decodable, Swift.CustomStringConvertible {
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
+  #endif
   public var rawValue: Swift.String {
     get
   }
@@ -114,20 +116,26 @@ extension PactSwiftMockServer.PactVerificationFailure.Mismatch.Actual : Swift.De
     public func queryParam(name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
     @discardableResult
     public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Request
+    #if compiler(>=5.3) && $NonescapableTypes
     @discardableResult
     public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Request
+    #endif
   }
   public struct Response : PactSwiftMockServer.HeaderBuilder, PactSwiftMockServer.BodyBuilder {
     @discardableResult
     public func status(_ status: Swift.Int) throws -> PactSwiftMockServer.Interaction.Response
     @discardableResult
     public func header(_ name: Swift.String, values: [Swift.String]) throws -> PactSwiftMockServer.Interaction.Response
+    #if compiler(>=5.3) && $NonescapableTypes
     @discardableResult
     public func body(_ body: Swift.String? = nil, contentType: Swift.String? = nil) throws -> PactSwiftMockServer.Interaction.Response
+    #endif
   }
   public enum HTTPMethod : Swift.String {
     case GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT, OPTIONS
+    #if compiler(>=5.3) && $NonescapableTypes
     public init?(rawValue: Swift.String)
+    #endif
     public typealias RawValue = Swift.String
     public var rawValue: Swift.String {
       get
@@ -145,8 +153,8 @@ extension PactSwiftMockServer.Interaction {
   public struct ProviderState : Swift.Hashable {
     public init(description: Swift.String)
     public init(description: Swift.String, name: Swift.String, value: Swift.String)
-    public func hash(into hasher: inout Swift.Hasher)
     public static func == (a: PactSwiftMockServer.Interaction.ProviderState, b: PactSwiftMockServer.Interaction.ProviderState) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
     public var hashValue: Swift.Int {
       get
     }
@@ -157,9 +165,11 @@ extension PactSwiftMockServer.Interaction {
   final public func given(_ providerStates: PactSwiftMockServer.Interaction.ProviderState...) throws -> Self
 }
 extension PactSwiftMockServer.Interaction.Error : Foundation.LocalizedError {
+  #if compiler(>=5.3) && $NonescapableTypes
   public var failureReason: Swift.String? {
     get
   }
+  #endif
 }
 extension PactSwiftMockServer.Interaction.ProviderState : Swift.ExpressibleByStringLiteral {
   public init(stringLiteral value: Swift.StringLiteralType)
@@ -168,16 +178,22 @@ extension PactSwiftMockServer.Interaction.ProviderState : Swift.ExpressibleByStr
   public typealias UnicodeScalarLiteralType = Swift.StringLiteralType
 }
 public protocol ProviderVerifying {
+  #if compiler(>=5.3) && $NonescapableTypes
   func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  #endif
 }
 final public class Verifier : PactSwiftMockServer.ProviderVerifying {
   public init()
+  #if compiler(>=5.3) && $NonescapableTypes
   final public func verifyProvider(options args: Swift.String) -> Swift.Result<Swift.Bool, PactSwiftMockServer.ProviderVerificationError>
+  #endif
   @objc deinit
 }
 public protocol BodyBuilder {
+  #if compiler(>=5.3) && $NonescapableTypes
   @discardableResult
   func body(_ body: Swift.String?, contentType: Swift.String?) throws -> Self
+  #endif
 }
 final public class PactBuilder {
   public enum Error {
@@ -198,9 +214,11 @@ final public class PactBuilder {
   @objc deinit
 }
 extension PactSwiftMockServer.PactBuilder.Error : Foundation.LocalizedError {
+  #if compiler(>=5.3) && $NonescapableTypes
   public var failureReason: Swift.String? {
     get
   }
+  #endif
 }
 public class MockServer {
   public enum Error : Swift.Equatable {
@@ -215,7 +233,9 @@ public class MockServer {
   public enum TransferProtocol : Swift.Int {
     case standard
     case secure
+    #if compiler(>=5.3) && $NonescapableTypes
     public init?(rawValue: Swift.Int)
+    #endif
     public typealias RawValue = Swift.Int
     public var rawValue: Swift.Int {
       get
@@ -227,25 +247,33 @@ public class MockServer {
   public var port: Swift.Int32 {
     get
   }
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(pact: PactSwiftMockServer.Pact, transferProtocol: PactSwiftMockServer.MockServer.TransferProtocol = .standard, port: Swift.Int32? = nil) throws
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public var tlsCACertificate: Swift.String? {
     get
   }
+  #endif
   @objc deinit
   public var requestsMatched: Swift.Bool {
     get
   }
+  #if compiler(>=5.3) && $NonescapableTypes
   public var mismatchesJSON: Swift.String? {
     get
   }
+  #endif
   public var logs: Swift.String {
     get
   }
 }
 extension PactSwiftMockServer.MockServer.Error : Foundation.LocalizedError {
+  #if compiler(>=5.3) && $NonescapableTypes
   public var failureReason: Swift.String? {
     get
   }
+  #endif
 }
 extension PactSwiftMockServer.MockServer.Error : Swift.RawRepresentable {
   public init(rawValue: Swift.Int32)
@@ -287,16 +315,24 @@ final public class Pact {
   @objc deinit
   final public func withSpecification(_ specification: PactSwiftMockServer.Pact.Specification) throws -> Self
   final public func withMetadata(namespace: Swift.String, name: Swift.String, value: Swift.String) throws -> Self
+  #if compiler(>=5.3) && $NonescapableTypes
   final public func writePactFile(directory: Swift.String? = nil, overwrite: Swift.Bool = false) throws
+  #endif
 }
 extension PactSwiftMockServer.Pact.Error : Foundation.LocalizedError {
+  #if compiler(>=5.3) && $NonescapableTypes
   public var failureReason: Swift.String? {
     get
   }
+  #endif
 }
 public enum Generate {
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func value(regex: Swift.String) -> Swift.String?
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func date(format: Swift.String) -> Swift.String?
+  #endif
 }
 public enum Logging {
   public enum Error {
@@ -305,7 +341,9 @@ public enum Logging {
   }
   public enum Level : Swift.String {
     case trace, debug, info, warn, error
+    #if compiler(>=5.3) && $NonescapableTypes
     public init?(rawValue: Swift.String)
+    #endif
     public typealias RawValue = Swift.String
     public var rawValue: Swift.String {
       get
@@ -336,17 +374,21 @@ public enum Logging {
     get
   }
   public static func log(_ level: PactSwiftMockServer.Logging.Level, message: Swift.String)
+  #if compiler(>=5.3) && $NonescapableTypes
   public static var lastInternalErrorMessage: Swift.String? {
     get
   }
+  #endif
 }
 extension Swift.Array where Element == PactSwiftMockServer.Logging.Sink.Config {
   public static let defaultSinks: [PactSwiftMockServer.Logging.Sink.Config]
 }
 extension PactSwiftMockServer.Logging.Error : Foundation.LocalizedError {
+  #if compiler(>=5.3) && $NonescapableTypes
   public var failureReason: Swift.String? {
     get
   }
+  #endif
 }
 extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Equatable {}
 extension PactSwiftMockServer.Interaction.HTTPMethod : Swift.Hashable {}

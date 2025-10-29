@@ -389,6 +389,13 @@
             "printedName": "Sendable",
             "usr": "s:s8SendableP",
             "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP",
+            "mangledName": "$ss16SendableMetatypeP"
           }
         ]
       },
@@ -1014,6 +1021,13 @@
               },
               {
                 "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
                 "name": "RawRepresentable",
                 "printedName": "RawRepresentable",
                 "children": [
@@ -1153,6 +1167,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               },
               {
                 "kind": "Conformance",
@@ -1748,6 +1769,13 @@
                   },
                   {
                     "kind": "Conformance",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP",
+                    "mangledName": "$ss16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
                     "name": "RawRepresentable",
                     "printedName": "RawRepresentable",
                     "children": [
@@ -1843,6 +1871,13 @@
                   },
                   {
                     "kind": "Conformance",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP",
+                    "mangledName": "$ss16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
                     "name": "Decodable",
                     "printedName": "Decodable",
                     "usr": "s:Se",
@@ -1913,6 +1948,13 @@
                     "printedName": "Sendable",
                     "usr": "s:s8SendableP",
                     "mangledName": "$ss8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP",
+                    "mangledName": "$ss16SendableMetatypeP"
                   },
                   {
                     "kind": "Conformance",
@@ -2021,6 +2063,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               },
               {
                 "kind": "Conformance",
@@ -2138,6 +2187,13 @@
             "printedName": "Sendable",
             "usr": "s:s8SendableP",
             "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP",
+            "mangledName": "$ss16SendableMetatypeP"
           },
           {
             "kind": "Conformance",
@@ -2495,6 +2551,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -4350,6 +4413,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -4459,6 +4529,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -4568,6 +4645,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -5217,6 +5301,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               },
               {
                 "kind": "Conformance",
@@ -6523,6 +6614,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -7224,6 +7322,13 @@
                 "printedName": "Sendable",
                 "usr": "s:s8SendableP",
                 "mangledName": "$ss8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP",
+                "mangledName": "$ss16SendableMetatypeP"
               }
             ]
           },
@@ -9011,6 +9116,13 @@
           },
           {
             "kind": "Conformance",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP",
+            "mangledName": "$ss16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Encodable",
             "printedName": "Encodable",
             "usr": "s:SE",
@@ -9032,32 +9144,48 @@
           },
           {
             "kind": "Conformance",
-            "name": "_ObjectiveCBridgeable",
-            "printedName": "_ObjectiveCBridgeable",
+            "name": "DataProtocol",
+            "printedName": "DataProtocol",
             "children": [
               {
                 "kind": "TypeWitness",
-                "name": "_ObjectiveCType",
-                "printedName": "_ObjectiveCType",
+                "name": "Regions",
+                "printedName": "Regions",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "NSArray",
-                    "printedName": "Foundation.NSArray",
-                    "usr": "c:objc(cs)NSArray"
+                    "name": "CollectionOfOne",
+                    "printedName": "Swift.CollectionOfOne<[Swift.UInt8]>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.UInt8]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt8",
+                            "printedName": "Swift.UInt8",
+                            "usr": "s:s5UInt8V"
+                          }
+                        ],
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "usr": "s:s15CollectionOfOneV"
                   }
                 ]
               }
             ],
-            "usr": "s:s21_ObjectiveCBridgeableP",
-            "mangledName": "$ss21_ObjectiveCBridgeableP"
+            "usr": "s:10Foundation12DataProtocolP",
+            "mangledName": "$s10Foundation12DataProtocolP"
           },
           {
             "kind": "Conformance",
-            "name": "CVarArg",
-            "printedName": "CVarArg",
-            "usr": "s:s7CVarArgP",
-            "mangledName": "$ss7CVarArgP"
+            "name": "MutableDataProtocol",
+            "printedName": "MutableDataProtocol",
+            "usr": "s:10Foundation19MutableDataProtocolP",
+            "mangledName": "$s10Foundation19MutableDataProtocolP"
           },
           {
             "kind": "Conformance",
@@ -9110,48 +9238,32 @@
           },
           {
             "kind": "Conformance",
-            "name": "DataProtocol",
-            "printedName": "DataProtocol",
+            "name": "_ObjectiveCBridgeable",
+            "printedName": "_ObjectiveCBridgeable",
             "children": [
               {
                 "kind": "TypeWitness",
-                "name": "Regions",
-                "printedName": "Regions",
+                "name": "_ObjectiveCType",
+                "printedName": "_ObjectiveCType",
                 "children": [
                   {
                     "kind": "TypeNominal",
-                    "name": "CollectionOfOne",
-                    "printedName": "Swift.CollectionOfOne<[Swift.UInt8]>",
-                    "children": [
-                      {
-                        "kind": "TypeNominal",
-                        "name": "Array",
-                        "printedName": "[Swift.UInt8]",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "UInt8",
-                            "printedName": "Swift.UInt8",
-                            "usr": "s:s5UInt8V"
-                          }
-                        ],
-                        "usr": "s:Sa"
-                      }
-                    ],
-                    "usr": "s:s15CollectionOfOneV"
+                    "name": "NSArray",
+                    "printedName": "Foundation.NSArray",
+                    "usr": "c:objc(cs)NSArray"
                   }
                 ]
               }
             ],
-            "usr": "s:10Foundation12DataProtocolP",
-            "mangledName": "$s10Foundation12DataProtocolP"
+            "usr": "s:s21_ObjectiveCBridgeableP",
+            "mangledName": "$ss21_ObjectiveCBridgeableP"
           },
           {
             "kind": "Conformance",
-            "name": "MutableDataProtocol",
-            "printedName": "MutableDataProtocol",
-            "usr": "s:10Foundation19MutableDataProtocolP",
-            "mangledName": "$s10Foundation19MutableDataProtocolP"
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
           }
         ]
       }
@@ -9160,77 +9272,77 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
       "kind": "StringLiteral",
       "offset": 7321,
       "length": 3,
       "value": "\"\/\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1220,
       "length": 6,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "StringLiteral",
       "offset": 1533,
       "length": 11,
       "value": "\"127.0.0.1\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/MockServer.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
       "offset": 1704,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
       "offset": 3982,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1664,
       "length": 7,
       "value": "\"TRACE\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1681,
       "length": 7,
       "value": "\"DEBUG\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1697,
       "length": 6,
       "value": "\"INFO\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1712,
       "length": 6,
       "value": "\"WARN\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "StringLiteral",
       "offset": 1728,
       "length": 7,
       "value": "\"ERROR\""
     },
     {
-      "filePath": "\/Users\/zack\/Projects\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Logging.swift",
       "kind": "BooleanLiteral",
       "offset": 3197,
       "length": 5,
