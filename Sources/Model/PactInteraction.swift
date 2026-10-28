@@ -97,6 +97,62 @@ public class PactInteraction {
 		return self
 	}
 
+	/// Marks the interaction as pending, so a provider failing to verify it does not fail the provider build.
+	/// - Note: Only written to ``Pact/Specification/v4`` pacts.
+	@discardableResult
+	public func pending(_ pending: Bool = true) throws -> Self {
+		guard pactffi_set_pending(handle, pending) else {
+			throw Error.handleInvalid
+		}
+
+		return self
+	}
+
+	/// Sets the key that identifies the interaction in the Pact.
+	/// - Note: Only written to ``Pact/Specification/v4`` pacts.
+	@discardableResult
+	public func key(_ key: String) throws -> Self {
+		guard pactffi_set_key(handle, key.cString(using: .utf8)) else {
+			throw Error.handleInvalid
+		}
+
+		return self
+	}
+
+	/// Adds a text comment to the interaction.
+	/// - Note: Only written to ``Pact/Specification/v4`` pacts.
+	@discardableResult
+	public func comment(_ text: String) throws -> Self {
+		guard pactffi_add_text_comment(handle, text.cString(using: .utf8)) else {
+			throw Error.handleInvalid
+		}
+
+		return self
+	}
+
+	/// Sets a comment entry on the interaction, where `json` is a JSON value. The `text` key holds the comments added by ``comment(_:)``.
+	/// - Note: Only written to ``Pact/Specification/v4`` pacts.
+	@discardableResult
+	public func comment(_ key: String, json: String) throws -> Self {
+		guard pactffi_set_comment(handle, key.cString(using: .utf8), json.cString(using: .utf8)) else {
+			throw Error.handleInvalid
+		}
+
+		return self
+	}
+
+	/// Adds a reference to an external description of the interaction, eg: `reference(group: "openapi", name: "operationId", value: "getOrder")`.
+	/// - Note: Only written to ``Pact/Specification/v4`` pacts.
+	@discardableResult
+	public func reference(group: String, name: String, value: String) throws -> Self {
+		let json = String(data: try JSONEncoder().encode(value), encoding: .utf8)!
+		guard pactffi_add_interaction_reference(handle, group.cString(using: .utf8), name.cString(using: .utf8), json.cString(using: .utf8)) else {
+			throw Error.handleInvalid
+		}
+
+		return self
+	}
+
 }
 
 public extension PactInteraction {

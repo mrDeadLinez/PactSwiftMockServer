@@ -39,6 +39,39 @@ class InteractionTests: XCTestCase {
 		// Nothing to assert as long as it doesn't crash. There is no externally visible state.
 	}
 
+	func testV4Fields() throws {
+		let pact = try Pact(consumer: "v4-fields-consumer", provider: "v4-fields-provider")
+			.withSpecification(.v4)
+
+		try Interaction(pactHandle: pact.handle, description: "An interaction")
+			.pending()
+			.key("get-test")
+			.comment("First comment")
+			.comment("Second comment")
+			.comment("ticket", json: #"{"id": 42}"#)
+			.reference(group: "openapi", name: "operationId", value: "123")
+			.withRequest(method: .GET, path: "/test")
+			.willRespond(with: 200)
+
+		try AsynchronousMessage(pactHandle: pact.handle, description: "A message")
+			.pending()
+			.comment("Message comment")
+			.body("hello", contentType: "text/plain")
+
+		let interactions = try writtenInteractions(of: pact)
+		let http = try XCTUnwrap(interactions.first { $0["type"] as? String == "Synchronous/HTTP" })
+		XCTAssertEqual(http["pending"] as? Bool, true)
+		XCTAssertEqual(http["key"] as? String, "get-test")
+		let comments = try XCTUnwrap(http["comments"] as? [String: Any])
+		XCTAssertEqual(comments["text"] as? [String], ["First comment", "Second comment"])
+		XCTAssertEqual(comments["ticket"] as? [String: Int], ["id": 42])
+		XCTAssertEqual((comments["references"] as? [String: [String: String]])?["openapi"]?["operationId"], "123")
+
+		let message = try XCTUnwrap(interactions.first { $0["type"] as? String == "Asynchronous/Messages" })
+		XCTAssertEqual(message["pending"] as? Bool, true)
+		XCTAssertEqual((message["comments"] as? [String: Any])?["text"] as? [String], ["Message comment"])
+	}
+
 	func testResponseStatusWithMatcher() throws {
 		let pact = try Pact(consumer: "status-consumer", provider: "status-provider")
 			.withSpecification(.v4)
@@ -49,13 +82,7 @@ class InteractionTests: XCTestCase {
 				try response.status(#"{"value":404,"pact:matcher:type":"statusCode","status":"clientError"}"#)
 			}
 
-		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-		defer { try? FileManager.default.removeItem(at: directory) }
-		try pact.writePactFile(directory: directory.path, overwrite: true)
-
-		let data = try Data(contentsOf: directory.appendingPathComponent(pact.filename))
-		let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
-		let interaction = try XCTUnwrap((json["interactions"] as? [[String: Any]])?.first)
+		let interaction = try XCTUnwrap(try writtenInteractions(of: pact).first)
 		let response = try XCTUnwrap(interaction["response"] as? [String: Any])
 		XCTAssertEqual(response["status"] as? Int, 404)
 
@@ -63,6 +90,20 @@ class InteractionTests: XCTestCase {
 		let matchers = try XCTUnwrap((statusRules["$"] as? [String: Any])?["matchers"] as? [[String: Any]])
 		XCTAssertEqual(matchers.first?["match"] as? String, "statusCode")
 		XCTAssertEqual(matchers.first?["status"] as? String, "clientError")
+	}
+
+}
+
+private extension InteractionTests {
+
+	func writtenInteractions(of pact: Pact) throws -> [[String: Any]] {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		try pact.writePactFile(directory: directory.path, overwrite: true)
+
+		let data = try Data(contentsOf: directory.appendingPathComponent(pact.filename))
+		let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+		return try XCTUnwrap(json["interactions"] as? [[String: Any]])
 	}
 
 }
