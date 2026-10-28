@@ -72,6 +72,30 @@ class InteractionTests: XCTestCase {
 		XCTAssertEqual((message["comments"] as? [String: Any])?["text"] as? [String], ["Message comment"])
 	}
 
+	func testProviderStateParams() throws {
+		let pact = try Pact(consumer: "params-consumer", provider: "params-provider")
+			.withSpecification(.v4)
+
+		try Interaction(pactHandle: pact.handle, description: "An interaction")
+			.given(
+				try .init(description: "A user exists", params: ["id": 1, "name": "John", "active": true, "tags": ["a", "b"], "score": 1.5]),
+				.init(description: "An order exists", name: "orderId", value: "\"42\"")
+			)
+			.withRequest(method: .GET, path: "/test")
+			.willRespond(with: 200)
+
+		let interaction = try XCTUnwrap(try writtenInteractions(of: pact).first)
+		let states = try XCTUnwrap(interaction["providerStates"] as? [[String: Any]])
+		let user = try XCTUnwrap(states.first { $0["name"] as? String == "A user exists" }?["params"] as? [String: Any])
+		XCTAssertEqual(user["id"] as? Int, 1)
+		XCTAssertEqual(user["name"] as? String, "John")
+		XCTAssertEqual(user["active"] as? Bool, true)
+		XCTAssertEqual(user["tags"] as? [String], ["a", "b"])
+		XCTAssertEqual(user["score"] as? Double, 1.5)
+		let order = try XCTUnwrap(states.first { $0["name"] as? String == "An order exists" }?["params"] as? [String: Any])
+		XCTAssertEqual(order["orderId"] as? String, "42")
+	}
+
 	func testResponseStatusWithMatcher() throws {
 		let pact = try Pact(consumer: "status-consumer", provider: "status-provider")
 			.withSpecification(.v4)

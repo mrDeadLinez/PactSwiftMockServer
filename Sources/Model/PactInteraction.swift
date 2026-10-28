@@ -72,6 +72,20 @@ public class PactInteraction {
 		return self
 	}
 
+	/// Adds a provider state to the Interaction with parameters given as a JSON object.
+	@discardableResult
+	internal func given(_ description: String, params: String) throws -> Self {
+		let result = pactffi_given_with_params(handle, description.cString(using: .utf8), params.cString(using: .utf8))
+		switch result {
+		case 0:
+			return self
+		case 1:
+			throw Error.canNotBeModified
+		default:
+			throw Error.unknownResult(Int(result))
+		}
+	}
+
 	/// Sets the test name annotation for the interaction. This allows capturing the name of the test as metadata.
 	/// - Warning: This can only be used with ``Pact/Specification/v4`` interactions.
 	@discardableResult
@@ -161,6 +175,7 @@ public extension PactInteraction {
 		var description: String
 		var name: String?
 		var value: String?
+		var params: String?
 
 		/// - Parameters:
 		///   - description -  The provider state description. It needs to be unique.
@@ -176,6 +191,17 @@ public extension PactInteraction {
 			self.description = description
 			self.name = name
 			self.value = value
+		}
+
+		/// - Parameters:
+		///   - description -  The provider state description. It needs to be unique.
+		///   - params - Parameters with their JSON types, eg: `["id": 1, "name": "John", "active": true]`.
+		/// - Throws: An `EncodingError` if a parameter can not be encoded as JSON.
+		public init(description: String, params: [String: any Encodable]) throws {
+			let encoder = JSONEncoder()
+			encoder.outputFormatting = .sortedKeys
+			self.description = description
+			self.params = String(data: try encoder.encode(params.mapValues(AnyEncodable.init)), encoding: .utf8)!
 		}
 	}
 
@@ -193,7 +219,9 @@ public extension PactInteraction {
 		precondition(Set(providerStates.map(\.description)).count == providerStates.count, "ProviderState descriptions must be unique!")
 
 		for state in providerStates {
-			if let name = state.name, let value = state.value {
+			if let params = state.params {
+				try given(state.description, params: params)
+			} else if let name = state.name, let value = state.value {
 				try given(state.description, withName: name, value: value)
 			} else {
 				try given(state.description)
@@ -248,6 +276,15 @@ extension PactInteraction.Error: LocalizedError {
 extension PactInteraction.ProviderState: ExpressibleByStringLiteral {
 	public init(stringLiteral value: StringLiteralType) {
 		self.init(description: value)
+	}
+}
+
+private struct AnyEncodable: Encodable {
+	let value: any Encodable
+
+	func encode(to encoder: Encoder) throws {
+		var container = encoder.singleValueContainer()
+		try container.encode(value)
 	}
 }
 
