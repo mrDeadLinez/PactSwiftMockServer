@@ -32,4 +32,16 @@ public protocol BodyBuilder {
 	///
 	@discardableResult
 	func body(_ body: String?, contentType: String?) throws -> Self
+
+	/// Adds a binary body for the ``Interaction``.
+	///
+	/// The body is matched byte for byte. Use this for payloads that are not valid UTF-8 text, such as images or PDFs.
+	///
+	/// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+	/// - Parameters:
+	///   - body: The raw body bytes.
+	///   - contentType: The content type of the body. Ignored if a content-type header is already set.
+	///
+	@discardableResult
+	func body(_ body: Data, contentType: String) throws -> Self
 }

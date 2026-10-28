@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		AjDzxKzW7gKK9e7A2y87s65V0lM=
+		NA14wfbCvndkgbc3wDyQKLqk840=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -15,7 +15,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xTEmrij5OZcKTFSL6KVcVLOG/z3ATNiifEFDIRBwouY=
+			RlZiEC+EGbLzJ977Eqdu/MBvrDLZCkfDIomvZ5aak2s=
 			</data>
 		</dict>
 		<key>Headers/PactSwiftMockServer.h</key>
@@ -29,56 +29,56 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Jz7XN5dcGxMnLA2TdQt2LGIHMm4g18y36gk7SsCL2N0=
+			u3ILtKJJ8Zp+Ef5cUWco7Ip6i4+GTrxHAB2850amS6U=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			fU5sv/sc/qXFETHGH9ak7KAPl8Gr19b0O2A2nbR7BB0=
+			/yn819IxK2r57BOm6enIFQ2yKV/74tUjCBcXhyD3HEY=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			f6HEbU4dXt3lnrfQQRaElwC0B/eWsRBdVBcJ48UyW0Q=
+			2ALVvnTxQXc8d9yCkfSQkshHeKVzw9G1s288npGCFtw=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			e7K7ABQuOS+w654TGEbUUpQynqZPEu7x8+ZgCs+BHU4=
+			GVNgrSiowPhguWFlfAyi+x2y1yoG8QmGuaZ4k0g+Wik=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			f6HEbU4dXt3lnrfQQRaElwC0B/eWsRBdVBcJ48UyW0Q=
+			2ALVvnTxQXc8d9yCkfSQkshHeKVzw9G1s288npGCFtw=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			/IuXA+8Cf0GztWCOld781uZNCfitQX4AOh3Q45JiyPY=
+			nhZyH6BEZTfxAF3EqK+uJWD2xIrGSrr/qhgFYULY/mE=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			67iYD0j0f/NI7rwSp4N9CcgnrRUFjpTyBN4nXR9OBww=
+			/JF+63X3Gf048rOp9kHXTpsGkxYvQSG6+FCmSxg9oFE=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			aVNeB1UIrCAT3PFCFPipQC2aLRa4KxhFXp4fMLYhfPA=
+			QMU2PXtMjHcqBWk15NVE2WlLg8rapnlQ/8rVXOZvl+g=
 			</data>
 		</dict>
 	</dict>

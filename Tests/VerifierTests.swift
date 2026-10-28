@@ -41,26 +41,69 @@ class VerifierTests: XCTestCase {
 
 	// MARK: - Tests
 
-	func testVerificationFails() {
-		let result = testSubject.verifyProvider(options: validArgs)
-		XCTAssertEqual(result, .failure(.verificationFailed))
+	func testVerificationSucceedsAgainstARunningProvider() throws {
+		let providerPact = Pact(consumer: "test-consumer", provider: "provider")
+		try providerPact.uponReceiving("a request").withRequest(path: "/").willRespond(with: 200)
+		let provider = try MockServer(pact: providerPact)
+
+		let pactFile = try writeValidPact()
+		defer { try? FileManager.default.removeItem(at: pactFile) }
+
+		let options = ProviderVerificationOptions(
+			provider: .init(url: URL(string: "http://127.0.0.1"), port: Int(provider.port)),
+			sources: [.file(pactFile.path)]
+		)
+
+		withExtendedLifetime(provider) {
+			XCTAssertEqual(testSubject.verifyProvider(options: options), .success(true))
+		}
 	}
 
-	func testInvalidArguments() {
-		let result = testSubject.verifyProvider(options: invalidArgs)
-		XCTAssertEqual(result, .failure(.invalidArguments))
+	func testVerificationFailsWhenThereAreNoPacts() {
+		let options = ProviderVerificationOptions(provider: .init(port: 1234), sources: [.directory("../NonExistingDir")])
+
+		XCTAssertEqual(testSubject.verifyProvider(options: options), .failure(.verificationFailed))
+	}
+
+	func testVerificationFailsWhenProviderIsNotRunning() throws {
+		let pactFile = try writeValidPact()
+		defer { try? FileManager.default.removeItem(at: pactFile) }
+
+		let options = ProviderVerificationOptions(provider: .init(port: 1), sources: [.file(pactFile.path)])
+
+		XCTAssertEqual(testSubject.verifyProvider(options: options), .failure(.verificationFailed))
+	}
+
+	func testInvalidConsumerVersionSelector() {
+		let options = ProviderVerificationOptions(
+			provider: .init(port: 1234),
+			sources: [.broker(.init(url: "http://localhost:1", consumerVersionSelectors: ["not json"]))]
+		)
+
+		XCTAssertEqual(testSubject.verifyProvider(options: options), .failure(.invalidArguments))
 	}
 
 }
 
 private extension VerifierTests {
 
-	var validArgs: String {
-		"--port\n1234\n--dir\n../NonExistingDir"
+	func writeValidPact() throws -> URL {
+		let pactFile = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).json")
+		try validPact.write(to: pactFile, atomically: true, encoding: .utf8)
+		return pactFile
 	}
 
-	var invalidArgs: String {
-		"--port\n1234\n--dir\n../Non\n/Existing/invalid/\npath"
+	var validPact: String {
+		"""
+		{
+		  "consumer": { "name": "test-consumer" },
+		  "provider": { "name": "provider" },
+		  "interactions": [
+		    { "description": "a request", "request": { "method": "GET", "path": "/" }, "response": { "status": 200 } }
+		  ],
+		  "metadata": { "pactSpecification": { "version": "3.0.0" } }
+		}
+		"""
 	}
 
 }

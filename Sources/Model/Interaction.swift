@@ -71,6 +71,12 @@ public final class Interaction {
 
 			return self
 		}
+
+		@discardableResult
+		public func body(_ body: Data, contentType: String) throws -> Self {
+			try withBinaryBody(handle, .request, body, contentType: contentType)
+			return self
+		}
 	}
 
 	public struct Response: HeaderBuilder, BodyBuilder {
@@ -125,6 +131,19 @@ public final class Interaction {
 				throw Error.canNotBeModified
 			}
 
+			return self
+		}
+
+		/// Adds a binary body for the ``Interaction``, matched byte for byte.
+		///
+		/// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+		/// - Parameters:
+		///   - body: The raw body bytes.
+		///   - contentType: The content type of the body. Ignored if a content-type header is already set.
+		///
+		@discardableResult
+		public func body(_ body: Data, contentType: String) throws -> Self {
+			try withBinaryBody(handle, .response, body, contentType: contentType)
 			return self
 		}
 	}
@@ -318,6 +337,15 @@ extension Interaction.Error: LocalizedError {
 				errorMessage ?? ""
 			)
 		}
+	}
+}
+
+private func withBinaryBody(_ handle: InteractionHandle, _ part: InteractionPart, _ body: Data, contentType: String) throws {
+	let added = body.withUnsafeBytes { bytes in
+		pactffi_with_binary_body(handle, part, contentType.cString(using: .utf8), bytes.bindMemory(to: UInt8.self).baseAddress, bytes.count)
+	}
+	guard added else {
+		throw Interaction.Error.canNotBeModified
 	}
 }
 

@@ -1,6 +1,6 @@
 PRODUCT_NAME = PactSwiftMockServer
 
-IPHONEOS_DEPLOYMENT_TARGET = 13.0
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
 SDKROOT = iphoneos
 INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Frameworks
 SKIP_INSTALL = YES
@@ -22,7 +22,7 @@ FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Resources/iOS-simulator
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 HEADER_SEARCH_PATHS = $(PROJECT_DIR)/Sources/Headers
 
-OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport
+OTHER_LDFLAGS = -weak_framework XCTEST -weak-lXCTestSwiftSupport -framework UIKit
 
 DEFINES_MODULE = YES
 CODE_SIGN_IDENTITY =

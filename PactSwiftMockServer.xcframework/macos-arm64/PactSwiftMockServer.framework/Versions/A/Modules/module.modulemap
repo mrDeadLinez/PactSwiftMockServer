@@ -7,5 +7,4 @@ framework module PactSwiftMockServer {
 
 module PactSwiftMockServer.Swift {
   header "PactSwiftMockServer-Swift.h"
-  requires objc
 }

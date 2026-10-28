@@ -23,7 +23,7 @@ set -o pipefail
 # Scirpt that prepares PactSwift.xcframework
 
 # Properties
-IPHONEOS_DEPLOYMENT_TARGET=13.0
+IPHONEOS_DEPLOYMENT_TARGET=15.0
 MACOSX_DEPLOYMENT_TARGET=13.0
 
 TMP_DIR="./.tmp/build-xcframework"

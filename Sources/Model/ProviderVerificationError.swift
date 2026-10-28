@@ -23,6 +23,9 @@ public enum ProviderVerificationError: Error, Equatable {
 	/// Verification process failed
 	case verificationFailed
 
+	/// Verification process could not be run
+	case executionFailed
+
 	/// Null pointer was received
 	case nullPointer
 
@@ -38,13 +41,11 @@ public enum ProviderVerificationError: Error, Equatable {
 	/// Unknown error
 	case unknown
 
-	/// Defines ProviderVerificationError with the code returned from pactffi_verify()
+	/// Defines ProviderVerificationError with the code returned from pactffi_verifier_execute()
 	init(code: Int32) {
 		switch code {
 		case 1: self = .verificationFailed
-		case 2: self = .nullPointer
-		case 3: self = .methodPanicked
-		case 4: self = .invalidArguments
+		case 2: self = .executionFailed
 		default: self = .unknown
 		}
 	}
@@ -53,6 +54,7 @@ public enum ProviderVerificationError: Error, Equatable {
 	public var description: String {
 		switch self {
 		case .verificationFailed: return describing("The verification process failed, see output for errors.")
+		case .executionFailed: return describing("The verification process could not be run, see output for errors.")
 		case .nullPointer: return describing("A null pointer was received.")
 		case .methodPanicked: return describing("The method panicked.")
 		case .invalidArguments: return describing("Invalid arguments were provided to the verification process.")

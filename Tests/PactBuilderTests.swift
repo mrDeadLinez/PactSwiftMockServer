@@ -52,7 +52,7 @@ final class PactBuilderTests: XCTestCase {
 	}
 
 	func testPactVersion() throws {
-		XCTAssertEqual(Pact.version, "0.4.19")
+		XCTAssertEqual(Pact.version, "0.5.12")
 	}
 
 	func testGetEvents() async throws {
@@ -111,6 +111,39 @@ final class PactBuilderTests: XCTestCase {
 			XCTAssertEqual(httpResponse.statusCode, 201)
 			XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "text/plain")
 			XCTAssertEqual(data, "OK".data(using: .utf8))
+		}
+	}
+
+	func testUploadAndDownloadBinaryBody() async throws {
+		// Contains a NUL byte and invalid UTF-8, which a String body can't carry.
+		let bytes = Data([0x89, 0x50, 0x4E, 0x47, 0x00, 0xFF, 0xFE, 0x0D, 0x0A])
+
+		try builder
+			.uponReceiving("a request to upload a binary document")
+			.given("There are events")
+			.testName(name)
+			.withRequest(method: .PUT, path: "/documents/1") { request in
+				try request.body(bytes, contentType: "application/octet-stream")
+			}
+			.willRespond(with: 200) { response in
+				try response.body(bytes, contentType: "application/octet-stream")
+			}
+
+		try await builder.verify { ctx in
+			var components = try XCTUnwrap(URLComponents(url: ctx.mockServerURL, resolvingAgainstBaseURL: false))
+			components.path = "/documents/1"
+
+			var request = URLRequest(url: try XCTUnwrap(components.url))
+			request.httpMethod = "PUT"
+			request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+			request.httpBody = bytes
+
+			let session = URLSession(configuration: .ephemeral)
+			let (data, response) = try await session.data(for: request)
+
+			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+			XCTAssertEqual(httpResponse.statusCode, 200)
+			XCTAssertEqual(data, bytes)
 		}
 	}
 }
