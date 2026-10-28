@@ -58,6 +58,44 @@ public final class PactBuilder {
 		pact.uponReceiving(description)
 	}
 
+	/// Create a new ``AsynchronousMessage``.
+	///
+	/// - parameter description - The message description. It needs to be unique for each interaction.
+	public func expectsToReceive(_ description: String) -> AsynchronousMessage {
+		pact.expectsToReceive(description)
+	}
+
+	/// Create a new ``SynchronousMessage``. Requires ``Pact/Specification/v4``.
+	///
+	/// - parameter description - The message description. It needs to be unique for each interaction.
+	public func synchronousMessage(_ description: String) -> SynchronousMessage {
+		pact.synchronousMessage(description)
+	}
+
+	/// Passes the message to the consumer's `handler` and writes the Pact when the handler does not throw.
+	public func verify(_ message: AsynchronousMessage, handler: (MessageContents) throws -> Void) throws {
+		try handler(message.reify())
+		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
+	}
+
+	/// Passes the message to the consumer's `handler` and writes the Pact when the handler does not throw.
+	public func verify(_ message: AsynchronousMessage, handler: @Sendable (MessageContents) async throws -> Void) async throws {
+		try await handler(message.reify())
+		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
+	}
+
+	/// Passes the request and responses to the consumer's `handler` and writes the Pact when the handler does not throw.
+	public func verify(_ message: SynchronousMessage, handler: (SynchronousMessageContents) throws -> Void) throws {
+		try handler(message.generateContents())
+		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
+	}
+
+	/// Passes the request and responses to the consumer's `handler` and writes the Pact when the handler does not throw.
+	public func verify(_ message: SynchronousMessage, handler: @Sendable (SynchronousMessageContents) async throws -> Void) async throws {
+		try await handler(message.generateContents())
+		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
+	}
+
 	/// Verify the configured interactions.
 	///
 	/// - Throws: An ``Error/pactFailure(_:)`` if the pact fails to verify or a ``MockServer/Error`` if the mock server fails.

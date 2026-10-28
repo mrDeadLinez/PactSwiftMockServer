@@ -104,6 +104,20 @@ public final class Pact {
 		Interaction(pactHandle: handle, description: description)
 	}
 
+	/// Create a new ``AsynchronousMessage``.
+	///
+	/// - parameter description - The message description. It needs to be unique for each interaction.
+	internal func expectsToReceive(_ description: String) -> AsynchronousMessage {
+		AsynchronousMessage(pactHandle: handle, description: description)
+	}
+
+	/// Create a new ``SynchronousMessage``.
+	///
+	/// - parameter description - The message description. It needs to be unique for each interaction.
+	internal func synchronousMessage(_ description: String) -> SynchronousMessage {
+		SynchronousMessage(pactHandle: handle, description: description)
+	}
+
 	/// Write out the pact file.
 	///
 	/// This function should be called if all the consumer tests have passed.
