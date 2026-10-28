@@ -102,6 +102,26 @@ public final class Interaction {
 			return self
 		}
 
+		/// Configures the response status for the Interaction, optionally with a matching rule and generator.
+		///
+		/// To include a matching rule, pass the matching rule JSON format with the example status as `value`. I.e.
+		///
+		/// ```
+		/// let status = #"{"value":404, "pact:matcher:type":"statusCode", "status":"clientError"}"#
+		/// response.status(status)
+		/// ```
+		/// See [IntegrationJson.md](https://github.com/pact-foundation/pact-reference/blob/master/rust/pact_ffi/IntegrationJson.md)
+		///
+		/// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+		@discardableResult
+		public func status(_ status: String) throws -> Self {
+			guard pactffi_response_status_v2(handle, status.cString(using: .utf8)) else {
+				throw Error.canNotBeModified
+			}
+
+			return self
+		}
+
 		@discardableResult
 		public func header(_ name: String, values: [String]) throws -> Self {
 			for (index, value) in values.enumerated() {

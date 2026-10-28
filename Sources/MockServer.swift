@@ -144,7 +144,7 @@ extension MockServer.Error: LocalizedError {
 		case .invalidAddress:
 			return NSLocalizedString("Invalid IP address", comment: "Error message when IP address is invalid")
 		case .invalidPactJSON:
-			return NSLocalizedString("Invalid Pact JSON", comment: "Error message when Pact JSON is invalid")
+			return NSLocalizedString("Invalid transport configuration JSON", comment: "Error message when the transport configuration JSON is invalid")
 		case .invalidHandle:
 			return NSLocalizedString("Invalid handle when starting mock server", comment: "Error message when handle is invalid")
 		case .unableToStart:

@@ -38,5 +38,31 @@ class InteractionTests: XCTestCase {
 		
 		// Nothing to assert as long as it doesn't crash. There is no externally visible state.
 	}
-	
+
+	func testResponseStatusWithMatcher() throws {
+		let pact = try Pact(consumer: "status-consumer", provider: "status-provider")
+			.withSpecification(.v4)
+
+		try Interaction(pactHandle: pact.handle, description: "An interaction")
+			.withRequest(method: .GET, path: "/test")
+			.willRespond(with: 200) { response in
+				try response.status(#"{"value":404,"pact:matcher:type":"statusCode","status":"clientError"}"#)
+			}
+
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		try pact.writePactFile(directory: directory.path, overwrite: true)
+
+		let data = try Data(contentsOf: directory.appendingPathComponent(pact.filename))
+		let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+		let interaction = try XCTUnwrap((json["interactions"] as? [[String: Any]])?.first)
+		let response = try XCTUnwrap(interaction["response"] as? [String: Any])
+		XCTAssertEqual(response["status"] as? Int, 404)
+
+		let statusRules = try XCTUnwrap((response["matchingRules"] as? [String: Any])?["status"] as? [String: Any])
+		let matchers = try XCTUnwrap((statusRules["$"] as? [String: Any])?["matchers"] as? [[String: Any]])
+		XCTAssertEqual(matchers.first?["match"] as? String, "statusCode")
+		XCTAssertEqual(matchers.first?["status"] as? String, "clientError")
+	}
+
 }
