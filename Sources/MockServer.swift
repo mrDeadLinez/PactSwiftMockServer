@@ -34,9 +34,27 @@ public class MockServer {
 	}
 
 	/// Network transfer protocol
-	public enum TransferProtocol: Int {
+	public enum TransferProtocol: Int, Sendable {
 		case standard
 		case secure
+	}
+
+	/// Options of the mock server
+	public struct Configuration: Equatable, Sendable {
+		/// Responds to CORS pre-flight requests, so browser based consumers can call the mock server from another origin.
+		public var corsPreflight: Bool
+
+		/// Keeps connections alive between requests.
+		public var keepAlive: Bool
+
+		public init(corsPreflight: Bool = false, keepAlive: Bool = true) {
+			self.corsPreflight = corsPreflight
+			self.keepAlive = keepAlive
+		}
+
+		var json: String {
+			#"{"corsPreflight":\#(corsPreflight),"keepAlive":\#(keepAlive)}"#
+		}
 	}
 
 	// MARK: - Properties
@@ -70,14 +88,15 @@ public class MockServer {
 	///   - pact: The ``Pact`` to create the server with.
 	///   - transferProtocol: The protocol to use when communicating with the mock server; defaults to `.standard`.
 	///   - port: The port on which to run mock server; use `nil` for a random port.
-	public init(pact: Pact, transferProtocol: TransferProtocol = .standard, port: Int32? = nil) throws {
+	///   - configuration: The options of the mock server.
+	public init(pact: Pact, transferProtocol: TransferProtocol = .standard, port: Int32? = nil, configuration: Configuration = Configuration()) throws {
 		self.transferProtocol = transferProtocol
 		self.pact = pact
 
 		let tryPort = port ?? Self.randomPort
 		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)")
 
-		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", nil)
+		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", configuration.json)
 		if result <= 0 {
 			throw Error(rawValue: result)
 		}
@@ -86,7 +105,9 @@ public class MockServer {
 		self.port = result
 	}
 
-	/// Fetch the CA Certificate used to generate the self-signed certificate for the TLS mock server.
+	/// The CA certificate pact_ffi ships for TLS mock servers.
+	///
+	/// - Note: It did not issue the certificate of a ``TransferProtocol/secure`` mock server, which signs its own certificate for `localhost` when it starts.
 	public var tlsCACertificate: String? {
 		guard let cert = pactffi_get_tls_ca_certificate() else {
 			return nil

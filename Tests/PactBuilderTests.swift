@@ -147,6 +147,25 @@ final class PactBuilderTests: XCTestCase {
 		}
 	}
 
+	func testSecureMockServer() async throws {
+		let pact = try Pact(consumer: consumer, provider: provider).withSpecification(.v4)
+		let builder = PactBuilder(pact: pact, config: .init(pactDirectory: pactDirectory, transferProtocol: .secure))
+
+		try builder
+			.uponReceiving("a secure request for events")
+			.testName(name)
+			.withRequest(path: "/secure-events")
+			.willRespond(with: 200)
+
+		try await builder.verify { ctx in
+			XCTAssertEqual(ctx.mockServerURL.scheme, "https")
+			let session = URLSession(configuration: .ephemeral, delegate: SelfSignedTrustingDelegate(), delegateQueue: nil)
+
+			let (_, response) = try await session.data(from: ctx.mockServerURL.appendingPathComponent("secure-events"))
+			XCTAssertEqual(try XCTUnwrap(response as? HTTPURLResponse).statusCode, 200)
+		}
+	}
+
 	func testBinaryBodyMatchingContentType() async throws {
 		let pngHeader = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 
@@ -253,5 +272,15 @@ final class PactBuilderTests: XCTestCase {
 			}
 			XCTAssertFalse(message.isEmpty)
 		}
+	}
+}
+
+/// Trusts the self-signed certificate of the mock server.
+private final class SelfSignedTrustingDelegate: NSObject, URLSessionDelegate, Sendable {
+	func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+		guard challenge.protectionSpace.host == "127.0.0.1", let trust = challenge.protectionSpace.serverTrust else {
+			return (.performDefaultHandling, nil)
+		}
+		return (.useCredential, URLCredential(trust: trust))
 	}
 }

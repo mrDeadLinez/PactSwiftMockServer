@@ -38,8 +38,19 @@ public final class PactBuilder {
 		/// The directory in to which Pacts are written.
 		public let pactDirectory: String
 
-		public init(pactDirectory: String) {
+		/// The protocol the mock server is called with.
+		///
+		/// A ``MockServer/TransferProtocol/secure`` mock server uses a certificate for `localhost` it signs itself when it starts,
+		/// so the consumer has to trust it, eg: by accepting the server trust in a `URLSessionDelegate`.
+		public let transferProtocol: MockServer.TransferProtocol
+
+		/// The options of the mock server.
+		public let mockServer: MockServer.Configuration
+
+		public init(pactDirectory: String, transferProtocol: MockServer.TransferProtocol = .standard, mockServer: MockServer.Configuration = MockServer.Configuration()) {
 			self.pactDirectory = pactDirectory
+			self.transferProtocol = transferProtocol
+			self.mockServer = mockServer
 		}
 	}
 
@@ -100,7 +111,7 @@ public final class PactBuilder {
 	///
 	/// - Throws: An ``Error/pactFailure(_:)`` if the pact fails to verify or a ``MockServer/Error`` if the mock server fails.
 	public func verify(handler: (ConsumerContext) throws -> Void) throws {
-		let mockServer = try MockServer(pact: pact, transferProtocol: .standard)
+		let mockServer = try MockServer(pact: pact, transferProtocol: config.transferProtocol, configuration: config.mockServer)
 
 		try handler(ConsumerContext(mockServerURL: mockServer.baseUrl))
 
@@ -111,7 +122,7 @@ public final class PactBuilder {
 	///
 	/// - Throws: An ``Error/pactFailure(_:)`` if the pact fails to verify or a ``MockServer/Error`` if the mock server fails.
 	public func verify(handler: @Sendable (ConsumerContext) async throws -> Void) async throws {
-		let mockServer = try MockServer(pact: pact, transferProtocol: .standard)
+		let mockServer = try MockServer(pact: pact, transferProtocol: config.transferProtocol, configuration: config.mockServer)
 
 		try await handler(ConsumerContext(mockServerURL: mockServer.baseUrl))
 

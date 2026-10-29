@@ -49,4 +49,32 @@ class MockServerTests: XCTestCase {
 		let server = try MockServer(pact: pact, transferProtocol: .secure)
 		XCTAssertNotNil(server.tlsCACertificate)
 	}
+
+	func testMockServer_RespondsToCORSPreflight() async throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact, configuration: .init(corsPreflight: true))
+
+		let (_, response) = try await URLSession(configuration: .ephemeral).data(for: preflightRequest(server.baseUrl))
+
+		let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+		XCTAssertEqual(httpResponse.statusCode, 204)
+		XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Access-Control-Allow-Origin"), "http://example.com")
+	}
+
+	func testMockServer_DoesNotRespondToCORSPreflightByDefault() async throws {
+		let pact = Pact(consumer: "Consumer", provider: "Provider")
+		let server = try MockServer(pact: pact)
+
+		let (_, response) = try await URLSession(configuration: .ephemeral).data(for: preflightRequest(server.baseUrl))
+
+		XCTAssertNotEqual(try XCTUnwrap(response as? HTTPURLResponse).statusCode, 204)
+	}
+
+	private func preflightRequest(_ url: URL) -> URLRequest {
+		var request = URLRequest(url: url.appendingPathComponent("events"))
+		request.httpMethod = "OPTIONS"
+		request.setValue("http://example.com", forHTTPHeaderField: "Origin")
+		request.setValue("POST", forHTTPHeaderField: "Access-Control-Request-Method")
+		return request
+	}
 }
