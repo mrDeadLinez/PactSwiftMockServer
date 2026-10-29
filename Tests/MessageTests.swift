@@ -99,6 +99,33 @@ final class MessageTests: XCTestCase {
 		XCTAssertFalse(FileManager.default.fileExists(atPath: pactDirectory.appendingPathComponent(pact.filename).path))
 	}
 
+	func testSynchronousMessageResponseMatches() throws {
+		let (pact, builder) = try makeBuilder(.v4)
+		let message = try orderStatusMessage(builder)
+
+		try builder.verify(message, respondingWith: { request in
+			XCTAssertEqual(try JSONSerialization.jsonObject(with: request.contents) as? [String: Int], ["orderId": 1])
+			return MessageContents(contents: Data(#"{"status": "shipped"}"#.utf8), contentType: "application/json", metadata: [:])
+		})
+
+		XCTAssertEqual(try interactions(of: pact).count, 1)
+	}
+
+	func testSynchronousMessageResponseMismatchDoesNotWritePact() throws {
+		let (pact, builder) = try makeBuilder(.v4)
+		let message = try orderStatusMessage(builder)
+
+		XCTAssertThrowsError(try builder.verify(message, respondingWith: { _ in
+			MessageContents(contents: Data(#"{"status": 1}"#.utf8), contentType: "application/json", metadata: [:])
+		})) { error in
+			guard case PactBuilder.Error.messageMismatch(let mismatches) = error else {
+				return XCTFail("Unexpected error \(error)")
+			}
+			XCTAssertTrue(mismatches.contains { $0.hasPrefix("$.status") }, "\(mismatches)")
+		}
+		XCTAssertFalse(FileManager.default.fileExists(atPath: pactDirectory.appendingPathComponent(pact.filename).path))
+	}
+
 	func testSynchronousMessage() throws {
 		let (pact, builder) = try makeBuilder(.v4)
 		let message = try builder
@@ -134,6 +161,17 @@ final class MessageTests: XCTestCase {
 }
 
 private extension MessageTests {
+
+	func orderStatusMessage(_ builder: PactBuilder) throws -> SynchronousMessage {
+		try builder
+			.synchronousMessage("a request for the order status")
+			.withRequest { request in
+				try request.body(#"{"orderId": 1}"#, contentType: "application/json")
+			}
+			.willRespond { response in
+				try response.body(#"{"status": {"value": "created", "pact:matcher:type": "type"}}"#, contentType: "application/json")
+			}
+	}
 
 	func makeBuilder(_ specification: Pact.Specification) throws -> (Pact, PactBuilder) {
 		let pact = try Pact(consumer: "message-consumer-\(UUID().uuidString)", provider: "message-provider")

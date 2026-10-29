@@ -22,6 +22,9 @@ public final class PactBuilder {
 	public enum Error {
 		/// Thrown when the Pact fails to verify.
 		case pactFailure([PactVerificationFailure])
+
+		/// Thrown when the response produced for a ``SynchronousMessage`` does not match the expected response.
+		case messageMismatch([String])
 	}
 
 	public struct ConsumerContext: Sendable {
@@ -107,6 +110,33 @@ public final class PactBuilder {
 		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
 	}
 
+	/// Passes the request to the consumer's `handler`, matches the response it produces against the first expected response
+	/// and writes the Pact when it matches.
+	///
+	/// - Throws: An ``Error/messageMismatch(_:)`` if the response does not match.
+	public func verify(_ message: SynchronousMessage, respondingWith handler: (MessageContents) throws -> MessageContents) throws {
+		let contents = try message.generateContents()
+		try verifyResponse(try handler(contents.request), of: message)
+	}
+
+	/// Passes the request to the consumer's `handler`, matches the response it produces against the first expected response
+	/// and writes the Pact when it matches.
+	///
+	/// - Throws: An ``Error/messageMismatch(_:)`` if the response does not match.
+	public func verify(_ message: SynchronousMessage, respondingWith handler: @Sendable (MessageContents) async throws -> MessageContents) async throws {
+		let contents = try message.generateContents()
+		try verifyResponse(try await handler(contents.request), of: message)
+	}
+
+	private func verifyResponse(_ response: MessageContents, of message: SynchronousMessage) throws {
+		let mismatches = try message.mismatches(of: response, index: 0)
+		guard mismatches.isEmpty else {
+			throw Error.messageMismatch(mismatches)
+		}
+
+		try pact.writePactFile(directory: config.pactDirectory, overwrite: false)
+	}
+
 	/// Verify the configured interactions.
 	///
 	/// - Throws: An ``Error/pactFailure(_:)`` if the pact fails to verify or a ``MockServer/Error`` if the mock server fails.
@@ -147,6 +177,8 @@ extension PactBuilder.Error: LocalizedError {
 		switch self {
 		case .pactFailure(let mismatches):
 			return String.localizedStringWithFormat(NSLocalizedString("Pact Failure (see below):\n%@", comment: ""), mismatches.map(\.description).joined(separator: "\n---\n"))
+		case .messageMismatch(let mismatches):
+			return String.localizedStringWithFormat(NSLocalizedString("Message Mismatch (see below):\n%@", comment: ""), mismatches.joined(separator: "\n"))
 		}
 	}
 }

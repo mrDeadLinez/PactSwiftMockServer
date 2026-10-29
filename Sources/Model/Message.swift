@@ -183,6 +183,24 @@ public final class SynchronousMessage: PactInteraction {
 		)
 	}
 
+	/// Matches `response` against the expected response at `index`, applying its matching rules.
+	///
+	/// - Returns: The mismatches, empty when the response matches.
+	internal func mismatches(of response: MessageContents, index: Int) throws -> [String] {
+		guard let contents = String(data: response.contents, encoding: .utf8) else {
+			throw Error.invalidBody("The response contents are not UTF-8 text")
+		}
+		guard let cString = pactffi_sync_message_match_response_contents(handle, index, response.contentType?.cString(using: .utf8), contents.cString(using: .utf8)) else {
+			throw Error.invalidBody(Logging.lastInternalErrorMessage ?? "No expected response at index \(index)")
+		}
+		defer { pactffi_string_delete(UnsafeMutablePointer(mutating: cString)) }
+
+		let mismatches = try JSONSerialization.jsonObject(with: Data(String(cString: cString).utf8)) as? [[String: Any]] ?? []
+		return mismatches.map { mismatch in
+			[mismatch["path"] as? String, mismatch["mismatch"] as? String].compactMap { $0 }.joined(separator: ": ")
+		}
+	}
+
 }
 
 /// A message as the consumer receives it.
