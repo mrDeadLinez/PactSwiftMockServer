@@ -55,6 +55,16 @@ public final class Verifier: ProviderVerifying {
 			provider.url.flatMap { $0.path.isEmpty ? nil : $0.path }?.cString(using: .utf8)
 		)
 
+		for transport in provider.transports {
+			pactffi_verifier_add_provider_transport(
+				handle,
+				transport.protocol.cString(using: .utf8),
+				UInt16(transport.port),
+				transport.path?.cString(using: .utf8),
+				transport.scheme?.cString(using: .utf8)
+			)
+		}
+
 		for source in options.sources {
 			guard add(source, to: handle) else {
 				return .failure(.invalidArguments)
@@ -70,13 +80,36 @@ public final class Verifier: ProviderVerifying {
 		}
 
 		if let stateChangeURL = options.stateChangeURL {
-			// State change data is sent in the request body, matching the pact_verifier_cli default
-			pactffi_verifier_set_provider_state(handle, stateChangeURL.absoluteString.cString(using: .utf8), 0, 1)
+			pactffi_verifier_set_provider_state(
+				handle,
+				stateChangeURL.absoluteString.cString(using: .utf8),
+				options.stateChangeTeardown ? 1 : 0,
+				options.stateChangeAsQuery ? 0 : 1
+			)
+		}
+
+		for (name, value) in options.customHeaders.sorted(by: { $0.key < $1.key }) {
+			pactffi_verifier_add_custom_header(handle, name.cString(using: .utf8), value.cString(using: .utf8))
+		}
+
+		if options.disableSSLVerification || options.requestTimeout != nil {
+			pactffi_verifier_set_verification_options(handle, options.disableSSLVerification ? 1 : 0, UInt(options.requestTimeout ?? 5000))
+		}
+
+		if let followRedirects = options.followRedirects {
+			pactffi_verifier_set_follow_redirects(handle, followRedirects ? 1 : 0)
 		}
 
 		if let publish = options.publish {
 			let result = withCStrings(publish.providerTags) {
-				pactffi_verifier_set_publish_options(handle, publish.providerVersion.cString(using: .utf8), nil, $0, $1, nil)
+				pactffi_verifier_set_publish_options(
+					handle,
+					publish.providerVersion.cString(using: .utf8),
+					publish.buildURL?.absoluteString.cString(using: .utf8),
+					$0,
+					$1,
+					publish.providerBranch?.cString(using: .utf8)
+				)
 			}
 			guard result == 0 else {
 				return .failure(.invalidArguments)
@@ -116,10 +149,34 @@ public struct ProviderVerificationOptions: Equatable {
 
 		public var port: Int
 
-		public init(name: String? = nil, url: URL? = nil, port: Int) {
+		/// Additional transports of the provider, eg: `message` for message pacts
+		public var transports: [Transport]
+
+		public init(name: String? = nil, url: URL? = nil, port: Int, transports: [Transport] = []) {
 			self.name = name
 			self.url = url
 			self.port = port
+			self.transports = transports
+		}
+	}
+
+	/// A transport the provider is called with
+	public struct Transport: Equatable {
+		/// The protocol of the transport, eg: `http` or `message`
+		public var `protocol`: String
+		public var port: Int
+
+		/// The path of the transport. Defaults to `/`.
+		public var path: String?
+
+		/// The scheme of the transport, eg: `https`
+		public var scheme: String?
+
+		public init(protocol: String, port: Int, path: String? = nil, scheme: String? = nil) {
+			self.protocol = `protocol`
+			self.port = port
+			self.path = path
+			self.scheme = scheme
 		}
 	}
 
@@ -143,6 +200,9 @@ public struct ProviderVerificationOptions: Equatable {
 		/// Provider tags, used by the broker to work out pending and WIP pacts
 		public var providerTags: [String]
 
+		/// Provider branch, used by the broker to work out pending and WIP pacts
+		public var providerBranch: String?
+
 		/// Consumer version selectors, each one a JSON document
 		public var consumerVersionSelectors: [String]
 
@@ -152,6 +212,7 @@ public struct ProviderVerificationOptions: Equatable {
 			enablePending: Bool = false,
 			includeWIPPactsSince: String? = nil,
 			providerTags: [String] = [],
+			providerBranch: String? = nil,
 			consumerVersionSelectors: [String] = []
 		) {
 			self.url = url
@@ -159,6 +220,7 @@ public struct ProviderVerificationOptions: Equatable {
 			self.enablePending = enablePending
 			self.includeWIPPactsSince = includeWIPPactsSince
 			self.providerTags = providerTags
+			self.providerBranch = providerBranch
 			self.consumerVersionSelectors = consumerVersionSelectors
 		}
 	}
@@ -193,10 +255,16 @@ public struct ProviderVerificationOptions: Equatable {
 	public struct Publish: Equatable {
 		public var providerVersion: String
 		public var providerTags: [String]
+		public var providerBranch: String?
 
-		public init(providerVersion: String, providerTags: [String] = []) {
+		/// URL of the build that ran the verification
+		public var buildURL: URL?
+
+		public init(providerVersion: String, providerTags: [String] = [], providerBranch: String? = nil, buildURL: URL? = nil) {
 			self.providerVersion = providerVersion
 			self.providerTags = providerTags
+			self.providerBranch = providerBranch
+			self.buildURL = buildURL
 		}
 	}
 
@@ -210,8 +278,26 @@ public struct ProviderVerificationOptions: Equatable {
 	/// URL to post state change requests to
 	public var stateChangeURL: URL?
 
+	/// Also calls the state change URL to tear down the provider states after each interaction
+	public var stateChangeTeardown: Bool
+
+	/// Sends the provider state as query parameters instead of in the request body
+	public var stateChangeAsQuery: Bool
+
 	/// Verification results are only published when set
 	public var publish: Publish?
+
+	/// Headers added to every request to the provider, eg: an `Authorization` header
+	public var customHeaders: [String: String]
+
+	/// Accepts invalid TLS certificates of the provider
+	public var disableSSLVerification: Bool
+
+	/// Timeout of the requests to the provider, in milliseconds. pact_ffi defaults to 5000.
+	public var requestTimeout: Int?
+
+	/// Whether redirects of the provider are followed. pact_ffi follows them by default.
+	public var followRedirects: Bool?
 
 	public init(
 		provider: Provider,
@@ -219,14 +305,26 @@ public struct ProviderVerificationOptions: Equatable {
 		filter: Filter? = nil,
 		consumers: [String] = [],
 		stateChangeURL: URL? = nil,
-		publish: Publish? = nil
+		stateChangeTeardown: Bool = false,
+		stateChangeAsQuery: Bool = false,
+		publish: Publish? = nil,
+		customHeaders: [String: String] = [:],
+		disableSSLVerification: Bool = false,
+		requestTimeout: Int? = nil,
+		followRedirects: Bool? = nil
 	) {
 		self.provider = provider
 		self.sources = sources
 		self.filter = filter
 		self.consumers = consumers
 		self.stateChangeURL = stateChangeURL
+		self.stateChangeTeardown = stateChangeTeardown
+		self.stateChangeAsQuery = stateChangeAsQuery
 		self.publish = publish
+		self.customHeaders = customHeaders
+		self.disableSSLVerification = disableSSLVerification
+		self.requestTimeout = requestTimeout
+		self.followRedirects = followRedirects
 	}
 
 }
@@ -261,7 +359,7 @@ private extension Verifier {
 						broker.includeWIPPactsSince?.cString(using: .utf8),
 						providerTags,
 						providerTagsCount,
-						nil,
+						broker.providerBranch?.cString(using: .utf8),
 						selectors,
 						selectorsCount,
 						nil,
