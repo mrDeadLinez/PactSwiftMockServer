@@ -181,6 +181,71 @@ class VerifierTests: XCTestCase {
 		}
 	}
 
+	func testVerificationWritesJSONReport() throws {
+		let providerPact = Pact(consumer: "test-consumer", provider: "provider")
+		try providerPact.uponReceiving("a request").withRequest(path: "/").willRespond(with: 200)
+		let provider = try MockServer(pact: providerPact)
+
+		let pactFile = try writePact(interactions: Self.httpInteraction)
+		let report = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).json")
+		defer {
+			try? FileManager.default.removeItem(at: pactFile)
+			try? FileManager.default.removeItem(at: report)
+		}
+
+		let options = ProviderVerificationOptions(
+			provider: .init(url: URL(string: "http://127.0.0.1"), port: Int(provider.port)),
+			sources: [.file(pactFile.path)],
+			jsonReportURL: report
+		)
+
+		withExtendedLifetime(provider) {
+			XCTAssertEqual(testSubject.verifyProvider(options: options), .success(true))
+		}
+
+		let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: report)) as? [String: Any])
+		XCTAssertEqual(json["result"] as? Bool, true)
+		let results = try XCTUnwrap(json["interactionResults"] as? [[String: Any]])
+		XCTAssertEqual(results.first?["description"] as? String, "a request")
+		XCTAssertEqual(results.first?["result"] as? String, "OK")
+	}
+
+	func testNoPactsIsNotAnErrorWhenDisabled() throws {
+		let brokerPact = Pact(consumer: "verifier", provider: "broker")
+		try brokerPact.uponReceiving("a request for the broker index").withRequest(path: "/").willRespond(with: 404)
+		let broker = try MockServer(pact: brokerPact)
+
+		var options = ProviderVerificationOptions(provider: .init(name: "provider", port: 1234), sources: [.broker(.init(url: broker.baseUrl.absoluteString))])
+		XCTAssertEqual(testSubject.verifyProvider(options: options), .failure(.verificationFailed))
+
+		options.noPactsIsError = false
+		XCTAssertEqual(testSubject.verifyProvider(options: options), .success(true))
+	}
+
+	func testURLSourceWithTokenAuthentication() throws {
+		let providerPact = Pact(consumer: "test-consumer", provider: "provider")
+		try providerPact.uponReceiving("a request").withRequest(path: "/").willRespond(with: 200)
+		let provider = try MockServer(pact: providerPact)
+
+		let pactHostPact = Pact(consumer: "verifier", provider: "pact-host")
+		try pactHostPact.uponReceiving("a request for the pact").withRequest(path: "/pact.json") { request in
+			try request.header("Authorization", values: ["Bearer token"])
+		}.willRespond(with: 200) { response in
+			try response.body(validPact, contentType: "application/json")
+		}
+		let pactHost = try MockServer(pact: pactHostPact)
+
+		let options = ProviderVerificationOptions(
+			provider: .init(url: URL(string: "http://127.0.0.1"), port: Int(provider.port)),
+			sources: [.url(pactHost.baseUrl.appendingPathComponent("pact.json"), authentication: .token("token"))]
+		)
+
+		withExtendedLifetime(provider) {
+			XCTAssertEqual(testSubject.verifyProvider(options: options), .success(true))
+		}
+		XCTAssertTrue(pactHost.requestsMatched, pactHost.mismatchesJSON ?? "")
+	}
+
 	func testInvalidConsumerVersionSelector() {
 		let options = ProviderVerificationOptions(
 			provider: .init(port: 1234),

@@ -100,6 +100,14 @@ public final class Verifier: ProviderVerifying {
 			pactffi_verifier_set_follow_redirects(handle, followRedirects ? 1 : 0)
 		}
 
+		if let noPactsIsError = options.noPactsIsError {
+			pactffi_verifier_set_no_pacts_is_error(handle, noPactsIsError ? 1 : 0)
+		}
+
+		if let colouredOutput = options.colouredOutput {
+			pactffi_verifier_set_coloured_output(handle, colouredOutput ? 1 : 0)
+		}
+
 		if let publish = options.publish {
 			let result = withCStrings(publish.providerTags) {
 				pactffi_verifier_set_publish_options(
@@ -117,6 +125,12 @@ public final class Verifier: ProviderVerifying {
 		}
 
 		let verificationResult = pactffi_verifier_execute(handle)
+
+		if let jsonReportURL = options.jsonReportURL {
+			guard writeJSONReport(of: handle, to: jsonReportURL) else {
+				return .failure(.invalidArguments)
+			}
+		}
 
 		if let output = pactffi_verifier_output(handle, 0) {
 			print(String(cString: output))
@@ -229,7 +243,7 @@ public struct ProviderVerificationOptions: Equatable {
 	public enum Source: Equatable {
 		case directory(String)
 		case file(String)
-		case url(URL)
+		case url(URL, authentication: Authentication? = nil)
 		case broker(Broker)
 	}
 
@@ -299,6 +313,15 @@ public struct ProviderVerificationOptions: Equatable {
 	/// Whether redirects of the provider are followed. pact_ffi follows them by default.
 	public var followRedirects: Bool?
 
+	/// Whether the verification fails when the Pact Broker finds no pacts for the provider. pact_ffi fails it by default.
+	public var noPactsIsError: Bool?
+
+	/// Whether the verification output uses ANSI colours. pact_ffi uses them by default.
+	public var colouredOutput: Bool?
+
+	/// A file the verification results are written to as JSON, with the result of every interaction
+	public var jsonReportURL: URL?
+
 	public init(
 		provider: Provider,
 		sources: [Source],
@@ -311,7 +334,10 @@ public struct ProviderVerificationOptions: Equatable {
 		customHeaders: [String: String] = [:],
 		disableSSLVerification: Bool = false,
 		requestTimeout: Int? = nil,
-		followRedirects: Bool? = nil
+		followRedirects: Bool? = nil,
+		noPactsIsError: Bool? = nil,
+		colouredOutput: Bool? = nil,
+		jsonReportURL: URL? = nil
 	) {
 		self.provider = provider
 		self.sources = sources
@@ -325,6 +351,9 @@ public struct ProviderVerificationOptions: Equatable {
 		self.disableSSLVerification = disableSSLVerification
 		self.requestTimeout = requestTimeout
 		self.followRedirects = followRedirects
+		self.noPactsIsError = noPactsIsError
+		self.colouredOutput = colouredOutput
+		self.jsonReportURL = jsonReportURL
 	}
 
 }
@@ -342,8 +371,15 @@ private extension Verifier {
 		case .file(let file):
 			pactffi_verifier_add_file_source(handle, file.cString(using: .utf8))
 
-		case .url(let url):
-			pactffi_verifier_url_source(handle, url.absoluteString.cString(using: .utf8), nil, nil, nil)
+		case let .url(url, authentication):
+			let credentials = authentication?.credentials
+			pactffi_verifier_url_source(
+				handle,
+				url.absoluteString.cString(using: .utf8),
+				credentials?.username?.cString(using: .utf8),
+				credentials?.password?.cString(using: .utf8),
+				credentials?.token?.cString(using: .utf8)
+			)
 
 		case .broker(let broker):
 			let credentials = broker.authentication?.credentials
@@ -371,6 +407,22 @@ private extension Verifier {
 		}
 
 		return true
+	}
+
+	/// Writes the verification results as JSON to `url`, returning `false` when they can't be written
+	func writeJSONReport(of handle: OpaquePointer, to url: URL) -> Bool {
+		guard let json = pactffi_verifier_json(handle) else {
+			return false
+		}
+		defer { pactffi_string_delete(UnsafeMutablePointer(mutating: json)) }
+
+		do {
+			try Data(String(cString: json).utf8).write(to: url)
+			return true
+		} catch {
+			Logging.log(.error, message: "Failed to write the verification results to \(url.path): \(error)")
+			return false
+		}
 	}
 
 }
