@@ -21,14 +21,7 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
   }
   public static func == (a: PactSwiftMockServer::ProviderVerificationError, b: PactSwiftMockServer::ProviderVerificationError) -> Swift::Bool
 }
-@_hasMissingDesignatedInitializers final public class Interaction {
-  public enum Error {
-    case panic(Swift::String?)
-    case handleInvalid
-    case canNotBeModified
-    case unsupportedForSpecificationVersion
-    case unknownResult(Swift::Int)
-  }
+@_hasMissingDesignatedInitializers final public class Interaction : PactSwiftMockServer::PactInteraction {
   public typealias RequestBuilder = (PactSwiftMockServer::Interaction.PactSwiftMockServer::Request) throws -> Swift::Void
   public typealias ResponseBuilder = (PactSwiftMockServer::Interaction.PactSwiftMockServer::Response) throws -> Swift::Void
   public struct Request : PactSwiftMockServer::HeaderBuilder, PactSwiftMockServer::BodyBuilder, PactSwiftMockServer::QueryBuilder {
@@ -40,16 +33,22 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     public func body(_ body: Swift::String? = nil, contentType: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
     @discardableResult
     public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
+    @discardableResult
+    public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
   }
   public struct Response : PactSwiftMockServer::HeaderBuilder, PactSwiftMockServer::BodyBuilder {
     @discardableResult
     public func status(_ status: Swift::Int) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
+    @discardableResult
+    public func status(_ status: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func header(_ name: Swift::String, values: [Swift::String]) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func body(_ body: Swift::String? = nil, contentType: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
+    @discardableResult
+    public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
   }
   public enum HTTPMethod : Swift::String {
     case GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT, OPTIONS
@@ -60,38 +59,10 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     }
   }
   @discardableResult
-  final public func testName(_ name: Swift::String) throws -> Self
-  @discardableResult
   final public func withRequest(method: PactSwiftMockServer::Interaction.PactSwiftMockServer::HTTPMethod = .GET, path: Swift::String = "/", builder: PactSwiftMockServer::Interaction.PactSwiftMockServer::RequestBuilder = { _ in }) throws -> Self
   @discardableResult
   final public func willRespond(with status: Swift::Int, builder: PactSwiftMockServer::Interaction.PactSwiftMockServer::ResponseBuilder = { _ in }) throws -> Self
   @objc deinit
-}
-extension PactSwiftMockServer::Interaction {
-  public struct ProviderState : Swift::Hashable {
-    public init(description: Swift::String)
-    public init(description: Swift::String, name: Swift::String, value: Swift::String)
-    public static func == (a: PactSwiftMockServer::Interaction.PactSwiftMockServer::ProviderState, b: PactSwiftMockServer::Interaction.PactSwiftMockServer::ProviderState) -> Swift::Bool
-    public func hash(into hasher: inout Swift::Hasher)
-    public var hashValue: Swift::Int {
-      get
-    }
-  }
-  @discardableResult
-  final public func given(_ providerStates: [PactSwiftMockServer::Interaction.PactSwiftMockServer::ProviderState]) throws -> Self
-  @discardableResult
-  final public func given(_ providerStates: PactSwiftMockServer::Interaction.PactSwiftMockServer::ProviderState...) throws -> Self
-}
-extension PactSwiftMockServer::Interaction.PactSwiftMockServer::Error : Foundation::LocalizedError {
-  public var failureReason: Swift::String? {
-    get
-  }
-}
-extension PactSwiftMockServer::Interaction.PactSwiftMockServer::ProviderState : Swift::ExpressibleByStringLiteral {
-  public init(stringLiteral value: Swift::StringLiteralType)
-  public typealias ExtendedGraphemeClusterLiteralType = Swift::StringLiteralType
-  public typealias StringLiteralType = Swift::StringLiteralType
-  public typealias UnicodeScalarLiteralType = Swift::StringLiteralType
 }
 public protocol HeaderBuilder {
   @discardableResult
@@ -283,6 +254,12 @@ final public class PactBuilder {
   }
   public init(pact: PactSwiftMockServer::Pact, config: PactSwiftMockServer::PactBuilder.PactSwiftMockServer::Config)
   final public func uponReceiving(_ description: Swift::String) -> PactSwiftMockServer::Interaction
+  final public func expectsToReceive(_ description: Swift::String) -> PactSwiftMockServer::AsynchronousMessage
+  final public func synchronousMessage(_ description: Swift::String) -> PactSwiftMockServer::SynchronousMessage
+  final public func verify(_ message: PactSwiftMockServer::AsynchronousMessage, handler: (PactSwiftMockServer::MessageContents) throws -> Swift::Void) throws
+  final public func verify(_ message: PactSwiftMockServer::AsynchronousMessage, handler: @Sendable (PactSwiftMockServer::MessageContents) async throws -> Swift::Void) async throws
+  final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, handler: (PactSwiftMockServer::SynchronousMessageContents) throws -> Swift::Void) throws
+  final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, handler: @Sendable (PactSwiftMockServer::SynchronousMessageContents) async throws -> Swift::Void) async throws
   final public func verify(handler: (PactSwiftMockServer::PactBuilder.PactSwiftMockServer::ConsumerContext) throws -> Swift::Void) throws
   final public func verify(handler: @Sendable (PactSwiftMockServer::PactBuilder.PactSwiftMockServer::ConsumerContext) async throws -> Swift::Void) async throws
   @objc deinit
@@ -402,6 +379,101 @@ extension PactSwiftMockServer::PactVerificationFailure.PactSwiftMockServer::Mism
 }
 extension PactSwiftMockServer::PactVerificationFailure.PactSwiftMockServer::Mismatch.PactSwiftMockServer::Actual : Swift::Decodable {
   public init(from decoder: any Swift::Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class PactInteraction {
+  public enum Error {
+    case panic(Swift::String?)
+    case handleInvalid
+    case canNotBeModified
+    case unsupportedForSpecificationVersion
+    case unknownResult(Swift::Int)
+    case invalidBody(Swift::String)
+  }
+  @discardableResult
+  public func testName(_ name: Swift::String) throws -> Self
+  @discardableResult
+  public func pending(_ pending: Swift::Bool = true) throws -> Self
+  @discardableResult
+  public func key(_ key: Swift::String) throws -> Self
+  @discardableResult
+  public func comment(_ text: Swift::String) throws -> Self
+  @discardableResult
+  public func comment(_ key: Swift::String, json: Swift::String) throws -> Self
+  @discardableResult
+  public func reference(group: Swift::String, name: Swift::String, value: Swift::String) throws -> Self
+  @objc deinit
+}
+extension PactSwiftMockServer::PactInteraction {
+  public struct ProviderState : Swift::Hashable {
+    public init(description: Swift::String)
+    public init(description: Swift::String, name: Swift::String, value: Swift::String)
+    public init(description: Swift::String, params: [Swift::String : any Swift::Encodable]) throws
+    public static func == (a: PactSwiftMockServer::PactInteraction.PactSwiftMockServer::ProviderState, b: PactSwiftMockServer::PactInteraction.PactSwiftMockServer::ProviderState) -> Swift::Bool
+    public func hash(into hasher: inout Swift::Hasher)
+    public var hashValue: Swift::Int {
+      get
+    }
+  }
+  @discardableResult
+  public func given(_ providerStates: [PactSwiftMockServer::PactInteraction.PactSwiftMockServer::ProviderState]) throws -> Self
+  @discardableResult
+  public func given(_ providerStates: PactSwiftMockServer::PactInteraction.PactSwiftMockServer::ProviderState...) throws -> Self
+}
+extension PactSwiftMockServer::PactInteraction.PactSwiftMockServer::Error : Foundation::LocalizedError {
+  public var failureReason: Swift::String? {
+    get
+  }
+}
+extension PactSwiftMockServer::PactInteraction.PactSwiftMockServer::ProviderState : Swift::ExpressibleByStringLiteral {
+  public init(stringLiteral value: Swift::StringLiteralType)
+  public typealias ExtendedGraphemeClusterLiteralType = Swift::StringLiteralType
+  public typealias StringLiteralType = Swift::StringLiteralType
+  public typealias UnicodeScalarLiteralType = Swift::StringLiteralType
+}
+public protocol MetadataBuilder {
+  @discardableResult
+  func metadata(_ name: Swift::String, json: Swift::String) throws -> Self
+}
+extension PactSwiftMockServer::MetadataBuilder {
+  @discardableResult
+  public func metadata(_ name: Swift::String, value: Swift::String) throws -> Self
+}
+public struct MessagePart : PactSwiftMockServer::BodyBuilder, PactSwiftMockServer::MetadataBuilder {
+  @discardableResult
+  public func body(_ body: Swift::String?, contentType: Swift::String?) throws -> PactSwiftMockServer::MessagePart
+  @discardableResult
+  public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::MessagePart
+  @discardableResult
+  public func metadata(_ name: Swift::String, json: Swift::String) throws -> PactSwiftMockServer::MessagePart
+}
+@_hasMissingDesignatedInitializers final public class AsynchronousMessage : PactSwiftMockServer::PactInteraction, PactSwiftMockServer::BodyBuilder, PactSwiftMockServer::MetadataBuilder {
+  @discardableResult
+  final public func body(_ body: Swift::String?, contentType: Swift::String?) throws -> Self
+  @discardableResult
+  final public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> Self
+  @discardableResult
+  final public func metadata(_ name: Swift::String, json: Swift::String) throws -> Self
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class SynchronousMessage : PactSwiftMockServer::PactInteraction {
+  public typealias PartBuilder = (PactSwiftMockServer::MessagePart) throws -> Swift::Void
+  @discardableResult
+  final public func withRequest(builder: PactSwiftMockServer::SynchronousMessage.PactSwiftMockServer::PartBuilder) throws -> Self
+  @discardableResult
+  final public func willRespond(builder: PactSwiftMockServer::SynchronousMessage.PactSwiftMockServer::PartBuilder) throws -> Self
+  @objc deinit
+}
+public struct MessageContents : Swift::Sendable, Swift::Equatable {
+  public let contents: Foundation::Data
+  public let contentType: Swift::String?
+  public let metadata: [Swift::String : Swift::String]
+  public init(contents: Foundation::Data, contentType: Swift::String?, metadata: [Swift::String : Swift::String])
+  public static func == (a: PactSwiftMockServer::MessageContents, b: PactSwiftMockServer::MessageContents) -> Swift::Bool
+}
+public struct SynchronousMessageContents : Swift::Sendable, Swift::Equatable {
+  public let request: PactSwiftMockServer::MessageContents
+  public let responses: [PactSwiftMockServer::MessageContents]
+  public static func == (a: PactSwiftMockServer::SynchronousMessageContents, b: PactSwiftMockServer::SynchronousMessageContents) -> Swift::Bool
 }
 extension PactSwiftMockServer::Interaction.PactSwiftMockServer::HTTPMethod : Swift::Equatable {}
 extension PactSwiftMockServer::Interaction.PactSwiftMockServer::HTTPMethod : Swift::Hashable {}

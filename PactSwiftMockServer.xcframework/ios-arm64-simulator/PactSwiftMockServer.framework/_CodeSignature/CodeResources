@@ -22,23 +22,23 @@
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		8N94WftWQ0KDcFaHD8nLXSVNZoc=
+		rMAViwTXd12dmSm//tFUCB3BO94=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		PruENocv10ZaoMje8Wzogl/DkHA=
+		4YdWDFN1pHhnbcRe8jc2jCSQDXI=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		b2cJX8YQOur2gL6tlmodaBGcr80=
+		iNw0XyA7zyM2dDhock3aUHwFqCE=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		PruENocv10ZaoMje8Wzogl/DkHA=
+		4YdWDFN1pHhnbcRe8jc2jCSQDXI=
 		</data>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		fd2Q5MvVWEAgCA5VbYKsutn1Ywo=
+		USHhoHWBaIcPQYlek6q1jCENfrU=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -72,35 +72,35 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/yn819IxK2r57BOm6enIFQ2yKV/74tUjCBcXhyD3HEY=
+			peZylDg7RjwnXnEV2a7W30H3ToObNyko4Pcd5vhJc5Y=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0Kz4KZZne3xVlqrPLnsh57OCxmo6L8PaRFFGw0226IQ=
+			hNquCfcJUEo5mSKdNnVUJ/e/TPTkpLz0NMox9qu/uDk=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			4tT1kwxWe9JKH0luQLBcdwYD2eAy57dPkwrNcJ7dJAA=
+			/oAdEX6gM6Gt803mzF7C7nlTnkEr7DRKufCqnZc9+pA=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0Kz4KZZne3xVlqrPLnsh57OCxmo6L8PaRFFGw0226IQ=
+			hNquCfcJUEo5mSKdNnVUJ/e/TPTkpLz0NMox9qu/uDk=
 			</data>
 		</dict>
 		<key>Modules/PactSwiftMockServer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UhyajtcK6Nc3IAPXgaNbnAIon1QrfCu8rW4F7C1Aaoc=
+			WhXcdLqXniYgSWq+tqb85jsi/gwE3KukVMwSrWQpask=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
