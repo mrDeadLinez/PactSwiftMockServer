@@ -294,11 +294,18 @@ private struct AnyEncodable: Encodable {
 	}
 }
 
-internal func withBinaryBody(_ handle: InteractionHandle, _ part: InteractionPart, _ body: Data, contentType: String) throws {
+internal func withBinaryBody(_ handle: InteractionHandle, _ part: InteractionPart, _ body: Data, contentType: String, matchingContentType: Bool = false) throws {
 	let added = body.withUnsafeBytes { bytes in
 		pactffi_with_binary_body(handle, part, contentType.cString(using: .utf8), bytes.bindMemory(to: UInt8.self).baseAddress, bytes.count)
 	}
 	guard added else {
+		throw PactInteraction.Error.canNotBeModified
+	}
+
+	guard matchingContentType else { return }
+	let rules = ["body": ["$": ["matchers": [["match": "contentType", "value": contentType]]]]]
+	let json = String(data: try JSONSerialization.data(withJSONObject: rules), encoding: .utf8)!
+	guard pactffi_with_matching_rules(handle, part, json.cString(using: .utf8)) else {
 		throw PactInteraction.Error.canNotBeModified
 	}
 }

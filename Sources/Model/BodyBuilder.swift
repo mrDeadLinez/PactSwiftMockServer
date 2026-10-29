@@ -44,4 +44,14 @@ public protocol BodyBuilder {
 	///
 	@discardableResult
 	func body(_ body: Data, contentType: String) throws -> Self
+
+	/// Adds a binary body for the ``Interaction`` that is matched on its content type, which is detected from its bytes, rather than on its contents.
+	///
+	/// - Throws: ``Interaction/Error/canNotBeModified`` if the interaction or Pact can't be modified (i.e. the mock server for it has already started).
+	/// - Parameters:
+	///   - body: The example body bytes.
+	///   - contentType: The content type the body has to have, eg: `image/png`.
+	///
+	@discardableResult
+	func body(_ body: Data, matchingContentType contentType: String) throws -> Self
 }

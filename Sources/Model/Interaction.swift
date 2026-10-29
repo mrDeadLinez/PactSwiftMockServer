@@ -70,6 +70,12 @@ public final class Interaction: PactInteraction {
 			return self
 		}
 
+		@discardableResult
+		public func body(_ body: Data, matchingContentType contentType: String) throws -> Self {
+			try withBinaryBody(handle, .request, body, contentType: contentType, matchingContentType: true)
+			return self
+		}
+
 		/// Adds a file as a part of a `multipart/form-data` body. Call it once for every part.
 		///
 		/// The part is matched on its content type, which pact_ffi detects from the part's bytes, not on its contents.
@@ -174,6 +180,12 @@ public final class Interaction: PactInteraction {
 		@discardableResult
 		public func body(_ body: Data, contentType: String) throws -> Self {
 			try withBinaryBody(handle, .response, body, contentType: contentType)
+			return self
+		}
+
+		@discardableResult
+		public func body(_ body: Data, matchingContentType contentType: String) throws -> Self {
+			try withBinaryBody(handle, .response, body, contentType: contentType, matchingContentType: true)
 			return self
 		}
 

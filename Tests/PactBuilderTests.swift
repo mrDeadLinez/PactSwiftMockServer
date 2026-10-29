@@ -147,6 +147,51 @@ final class PactBuilderTests: XCTestCase {
 		}
 	}
 
+	func testBinaryBodyMatchingContentType() async throws {
+		let pngHeader = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+
+		try builder
+			.uponReceiving("a request to upload a photo")
+			.testName(name)
+			.withRequest(method: .PUT, path: "/photos/1") { request in
+				try request.body(pngHeader + Data([0x00, 0x01]), matchingContentType: "image/png")
+			}
+			.willRespond(with: 204)
+
+		try await builder.verify { ctx in
+			var request = URLRequest(url: ctx.mockServerURL.appendingPathComponent("photos/1"))
+			request.httpMethod = "PUT"
+			request.setValue("image/png", forHTTPHeaderField: "Content-Type")
+			request.httpBody = pngHeader + Data([0x02, 0x03, 0x04])
+
+			let (_, response) = try await URLSession(configuration: .ephemeral).data(for: request)
+			XCTAssertEqual(try XCTUnwrap(response as? HTTPURLResponse).statusCode, 204)
+		}
+	}
+
+	func testBinaryBodyMatchingContentTypeFailsForOtherContent() async throws {
+		try builder
+			.uponReceiving("a request to upload a photo as text")
+			.testName(name)
+			.withRequest(method: .PUT, path: "/photos/2") { request in
+				try request.body(Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]), matchingContentType: "image/png")
+			}
+			.willRespond(with: 204)
+
+		do {
+			try await builder.verify { ctx in
+				var request = URLRequest(url: ctx.mockServerURL.appendingPathComponent("photos/2"))
+				request.httpMethod = "PUT"
+				request.setValue("image/png", forHTTPHeaderField: "Content-Type")
+				request.httpBody = Data("not a photo".utf8)
+				_ = try await URLSession(configuration: .ephemeral).data(for: request)
+			}
+			XCTFail("Expected the body to not match")
+		} catch PactBuilder.Error.pactFailure {
+			// expected
+		}
+	}
+
 	func testUploadAndDownloadMultipartBody() async throws {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
