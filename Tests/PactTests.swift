@@ -29,5 +29,48 @@ class PactTests: XCTestCase {
 		XCTAssertEqual(pact.provider, "provider")
 		XCTAssertEqual(pact.filename, "consumer-provider.json")
 	}
-	
+
+	func testUsingPluginThatIsNotInstalledThrows() throws {
+		let pact = Pact(consumer: "plugin-consumer", provider: "plugin-provider")
+
+		XCTAssertThrowsError(try pact.usingPlugin("not-installed-plugin", version: "0.0.1")) { error in
+			guard case Pact.Error.canNotLoadPlugin(let name, _) = error else {
+				return XCTFail("Unexpected error \(error)")
+			}
+			XCTAssertEqual(name, "not-installed-plugin")
+		}
+	}
+
+	func testPluginContentsFallBackToCoreContentTypes() throws {
+		let pact = try Pact(consumer: "plugin-consumer", provider: "plugin-provider").withSpecification(.v4)
+
+		try Interaction(pactHandle: pact.handle, description: "a plugin request")
+			.withRequest(method: .POST, path: "/") { request in
+				try request.pluginContents(#"{"contents": {"id": 1}}"#, contentType: "application/json")
+			}
+			.willRespond(with: 200)
+
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		try pact.writePactFile(directory: directory.path, overwrite: true)
+
+		let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: directory.appendingPathComponent(pact.filename))) as? [String: Any])
+		let request = try XCTUnwrap((json["interactions"] as? [[String: Any]])?.first?["request"] as? [String: Any])
+		XCTAssertEqual(((request["body"] as? [String: Any])?["content"] as? [String: Int]), ["id": 1])
+	}
+
+	func testPluginContentsWithInvalidJSONThrows() throws {
+		let pact = try Pact(consumer: "plugin-consumer", provider: "plugin-provider").withSpecification(.v4)
+
+		XCTAssertThrowsError(
+			try Interaction(pactHandle: pact.handle, description: "a plugin request")
+				.withRequest(method: .POST, path: "/") { request in
+					try request.pluginContents("not json", contentType: "application/protobuf")
+				}
+		) { error in
+			guard case PactInteraction.Error.invalidBody = error else {
+				return XCTFail("Unexpected error \(error)")
+			}
+		}
+	}
 }

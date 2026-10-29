@@ -47,9 +47,13 @@ public class MockServer {
 		/// Keeps connections alive between requests.
 		public var keepAlive: Bool
 
-		public init(corsPreflight: Bool = false, keepAlive: Bool = true) {
+		/// A transport provided by a plugin, eg: `grpc`. It replaces the ``TransferProtocol``.
+		public var transport: String?
+
+		public init(corsPreflight: Bool = false, keepAlive: Bool = true, transport: String? = nil) {
 			self.corsPreflight = corsPreflight
 			self.keepAlive = keepAlive
+			self.transport = transport
 		}
 
 		var json: String {
@@ -96,7 +100,7 @@ public class MockServer {
 		let tryPort = port ?? Self.randomPort
 		Logging.log(.debug, message: "Starting mock server on \(socketAddress):\(tryPort)")
 
-		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), useTLS ? "https" : "http", configuration.json)
+		let result = pactffi_create_mock_server_for_transport(pact.handle, socketAddress, UInt16(tryPort), configuration.transport ?? (useTLS ? "https" : "http"), configuration.json)
 		if result <= 0 {
 			throw Error(rawValue: result)
 		}

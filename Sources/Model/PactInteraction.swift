@@ -310,6 +310,22 @@ internal func withBinaryBody(_ handle: InteractionHandle, _ part: InteractionPar
 	}
 }
 
+internal func withPluginContents(_ handle: InteractionHandle, _ part: InteractionPart, _ json: String, contentType: String) throws {
+	let result = pactffi_interaction_contents(handle, part, contentType.cString(using: .utf8), json.cString(using: .utf8))
+	switch result {
+	case 0:
+		return
+	case 1:
+		throw PactInteraction.Error.panic(Logging.lastInternalErrorMessage)
+	case 2:
+		throw PactInteraction.Error.canNotBeModified
+	case 3:
+		throw PactInteraction.Error.handleInvalid
+	default:
+		throw PactInteraction.Error.invalidBody(Logging.lastInternalErrorMessage ?? "error code \(result)")
+	}
+}
+
 internal extension InteractionPart {
 	static var request: Self { InteractionPart(rawValue: 0) }
 	static var response: Self { InteractionPart(rawValue: 1) }

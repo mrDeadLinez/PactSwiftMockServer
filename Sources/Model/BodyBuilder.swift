@@ -54,4 +54,14 @@ public protocol BodyBuilder {
 	///
 	@discardableResult
 	func body(_ body: Data, matchingContentType contentType: String) throws -> Self
+
+	/// Sets the contents with a plugin loaded with ``Pact/usingPlugin(_:version:)``, eg: a protobuf message.
+	///
+	/// - Throws: ``PactInteraction/Error`` when the plugin can't configure the contents.
+	/// - Parameters:
+	///   - json: The configuration of the contents passed to the plugin. Its format is defined by the plugin.
+	///   - contentType: The content type the plugin handles, eg: `application/protobuf`.
+	///
+	@discardableResult
+	func pluginContents(_ json: String, contentType: String) throws -> Self
 }

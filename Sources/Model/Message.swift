@@ -60,6 +60,12 @@ public struct MessagePart: BodyBuilder, MetadataBuilder {
 	}
 
 	@discardableResult
+	public func pluginContents(_ json: String, contentType: String) throws -> Self {
+		try withPluginContents(handle, part, json, contentType: contentType)
+		return self
+	}
+
+	@discardableResult
 	public func metadata(_ name: String, json: String) throws -> Self {
 		guard pactffi_with_metadata(handle, name.cString(using: .utf8), json.cString(using: .utf8), part) else {
 			throw PactInteraction.Error.canNotBeModified
@@ -96,6 +102,12 @@ public final class AsynchronousMessage: PactInteraction, BodyBuilder, MetadataBu
 	@discardableResult
 	public func body(_ body: Data, matchingContentType contentType: String) throws -> Self {
 		try MessagePart(handle: handle, part: .request).body(body, matchingContentType: contentType)
+		return self
+	}
+
+	@discardableResult
+	public func pluginContents(_ json: String, contentType: String) throws -> Self {
+		try MessagePart(handle: handle, part: .request).pluginContents(json, contentType: contentType)
 		return self
 	}
 

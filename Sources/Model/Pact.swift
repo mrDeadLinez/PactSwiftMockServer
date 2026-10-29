@@ -36,6 +36,8 @@ public final class Pact {
 		/// - 2 - The pact file was not able to be written.
 		/// - 3 - The pact for the given handle was not found.
 		case canNotWritePact(Int32)
+
+		case canNotLoadPlugin(String, String?)
 	}
 
 	public static var version: String {
@@ -46,6 +48,8 @@ public final class Pact {
 	public let provider: String
 
 	internal let handle: PactHandle
+
+	private var usesPlugins = false
 
 	public var filename: String {
 		"\(consumer)-\(provider).json"
@@ -58,6 +62,10 @@ public final class Pact {
 	}
 
 	deinit {
+		if usesPlugins {
+			pactffi_cleanup_plugins(handle)
+		}
+
 		let result = pactffi_free_pact_handle(handle)
 		if result > 0 {
 			Logging.log(
@@ -100,6 +108,24 @@ public final class Pact {
 	/// Create a new `Interaction`.
 	///
 	/// - parameter description - The interaction description. It needs to be unique for each interaction.
+	/// Loads a plugin, eg: `protobuf`, which provides content types, matchers or transports. The plugin has to be installed in `~/.pact/plugins`.
+	///
+	/// Plugins run as separate processes, so they are not available on iOS devices.
+	///
+	/// - Throws: ``Error/canNotLoadPlugin(_:_:)`` when the plugin can't be loaded.
+	/// - Parameters:
+	///   - name: The name of the plugin.
+	///   - version: The version of the plugin. The latest installed version is used when `nil`.
+	@discardableResult
+	public func usingPlugin(_ name: String, version: String? = nil) throws -> Self {
+		guard pactffi_using_plugin(handle, name.cString(using: .utf8), version?.cString(using: .utf8)) == 0 else {
+			throw Error.canNotLoadPlugin(name, Logging.lastInternalErrorMessage)
+		}
+
+		usesPlugins = true
+		return self
+	}
+
 	internal func uponReceiving(_ description: String) -> Interaction {
 		Interaction(pactHandle: handle, description: description)
 	}
@@ -151,6 +177,12 @@ extension Pact.Error: LocalizedError {
 					comment: "Format for error failure reason when can't write to Pact file"
 				),
 				code
+			)
+		case let .canNotLoadPlugin(name, message):
+			return String.localizedStringWithFormat(
+				NSLocalizedString("Can not load plugin %@ (error: %@)", comment: "Format for error failure reason when a plugin can't be loaded"),
+				name,
+				message ?? ""
 			)
 		}
 	}
