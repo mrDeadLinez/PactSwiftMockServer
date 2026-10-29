@@ -146,4 +146,67 @@ final class PactBuilderTests: XCTestCase {
 			XCTAssertEqual(data, bytes)
 		}
 	}
+
+	func testUploadAndDownloadMultipartBody() async throws {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		let pngHeader = Data([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+		let imageFile = directory.appendingPathComponent("photo.png")
+		try (pngHeader + Data([0x00, 0x01])).write(to: imageFile)
+		let textFile = directory.appendingPathComponent("notes.txt")
+		try Data("Some notes".utf8).write(to: textFile)
+
+		try builder
+			.uponReceiving("a multipart upload")
+			.testName(name)
+			.withRequest(method: .POST, path: "/uploads") { request in
+				try request
+					.multipartBody(contentsOf: imageFile, contentType: "image/png", partName: "photo")
+					.multipartBody(contentsOf: textFile, contentType: "text/plain", partName: "notes")
+			}
+			.willRespond(with: 200) { response in
+				try response.multipartBody(contentsOf: textFile, contentType: "text/plain", partName: "receipt", boundary: "receipt-boundary")
+			}
+
+		try await builder.verify { ctx in
+			var components = try XCTUnwrap(URLComponents(url: ctx.mockServerURL, resolvingAgainstBaseURL: false))
+			components.path = "/uploads"
+
+			let boundary = "client-boundary"
+			var body = Data("--\(boundary)\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"other.png\"\r\nContent-Type: image/png\r\n\r\n".utf8)
+			body += pngHeader + Data([0x02, 0x03])
+			body += Data("\r\n--\(boundary)\r\nContent-Disposition: form-data; name=\"notes\"; filename=\"notes.txt\"\r\nContent-Type: text/plain\r\n\r\nOther notes\r\n".utf8)
+			body += Data("--\(boundary)--\r\n".utf8)
+
+			var request = URLRequest(url: try XCTUnwrap(components.url))
+			request.httpMethod = "POST"
+			request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+			request.httpBody = body
+
+			let (data, response) = try await URLSession(configuration: .ephemeral).data(for: request)
+
+			let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+			XCTAssertEqual(httpResponse.statusCode, 200)
+			XCTAssertEqual(httpResponse.value(forHTTPHeaderField: "Content-Type"), "multipart/form-data; boundary=receipt-boundary")
+			let text = try XCTUnwrap(String(data: data, encoding: .utf8))
+			XCTAssertTrue(text.contains("name=\"receipt\""))
+			XCTAssertTrue(text.contains("Some notes"))
+		}
+	}
+
+	func testMultipartBodyWithMissingFileThrows() throws {
+		let interaction = builder.uponReceiving("a multipart upload of a missing file")
+
+		XCTAssertThrowsError(
+			try interaction.withRequest(method: .POST, path: "/uploads") { request in
+				try request.multipartBody(contentsOf: URL(fileURLWithPath: "/nonexistent/file.txt"), contentType: "text/plain", partName: "file")
+			}
+		) { error in
+			guard case PactInteraction.Error.invalidBody(let message) = error else {
+				return XCTFail("Unexpected error \(error)")
+			}
+			XCTAssertFalse(message.isEmpty)
+		}
+	}
 }

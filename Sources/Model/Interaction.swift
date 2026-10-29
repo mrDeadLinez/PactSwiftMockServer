@@ -69,6 +69,24 @@ public final class Interaction: PactInteraction {
 			try withBinaryBody(handle, .request, body, contentType: contentType)
 			return self
 		}
+
+		/// Adds a file as a part of a `multipart/form-data` body. Call it once for every part.
+		///
+		/// The part is matched on its content type, which pact_ffi detects from the part's bytes, not on its contents.
+		/// JSON is detected as `text/plain`, so an `application/json` part does not match.
+		///
+		/// - Throws: ``PactInteraction/Error/invalidBody(_:)`` if the file can't be read or the interaction can't be modified.
+		/// - Parameters:
+		///   - fileURL: The file with the example contents of the part.
+		///   - contentType: The content type of the part.
+		///   - partName: The name of the part.
+		///   - boundary: The boundary of the parts. A random one is used when `nil`.
+		///
+		@discardableResult
+		public func multipartBody(contentsOf fileURL: URL, contentType: String, partName: String, boundary: String? = nil) throws -> Self {
+			try InteractionPart.request.addMultipartFile(handle, fileURL: fileURL, contentType: contentType, partName: partName, boundary: boundary)
+			return self
+		}
 	}
 
 	public struct Response: HeaderBuilder, BodyBuilder {
@@ -156,6 +174,24 @@ public final class Interaction: PactInteraction {
 		@discardableResult
 		public func body(_ body: Data, contentType: String) throws -> Self {
 			try withBinaryBody(handle, .response, body, contentType: contentType)
+			return self
+		}
+
+		/// Adds a file as a part of a `multipart/form-data` body. Call it once for every part.
+		///
+		/// The part is matched on its content type, which pact_ffi detects from the part's bytes, not on its contents.
+		/// JSON is detected as `text/plain`, so an `application/json` part does not match.
+		///
+		/// - Throws: ``PactInteraction/Error/invalidBody(_:)`` if the file can't be read or the interaction can't be modified.
+		/// - Parameters:
+		///   - fileURL: The file with the example contents of the part.
+		///   - contentType: The content type of the part.
+		///   - partName: The name of the part.
+		///   - boundary: The boundary of the parts. A random one is used when `nil`.
+		///
+		@discardableResult
+		public func multipartBody(contentsOf fileURL: URL, contentType: String, partName: String, boundary: String? = nil) throws -> Self {
+			try InteractionPart.response.addMultipartFile(handle, fileURL: fileURL, contentType: contentType, partName: partName, boundary: boundary)
 			return self
 		}
 	}

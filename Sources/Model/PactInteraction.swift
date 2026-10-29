@@ -30,6 +30,7 @@ public class PactInteraction {
 		case canNotBeModified
 		case unsupportedForSpecificationVersion
 		case unknownResult(Int)
+		case invalidBody(String)
 	}
 
 	internal let handle: InteractionHandle
@@ -264,6 +265,11 @@ extension PactInteraction.Error: LocalizedError {
 				NSLocalizedString("Unknown result (error code: %d)", comment: "Error message when an unknown result is returned"),
 				code
 			)
+		case .invalidBody(let errorMessage):
+			return String.localizedStringWithFormat(
+				NSLocalizedString("Invalid body (error: %@)", comment: "Error message when a body can not be set"),
+				errorMessage
+			)
 		case .panic(let errorMessage):
 			return String.localizedStringWithFormat(
 				NSLocalizedString("Function paniced (error: %@)", comment: "Error message when a rust function panics"),
@@ -300,4 +306,20 @@ internal func withBinaryBody(_ handle: InteractionHandle, _ part: InteractionPar
 internal extension InteractionPart {
 	static var request: Self { InteractionPart(rawValue: 0) }
 	static var response: Self { InteractionPart(rawValue: 1) }
+
+	func addMultipartFile(_ handle: InteractionHandle, fileURL: URL, contentType: String, partName: String, boundary: String?) throws {
+		let result = pactffi_with_multipart_file_v2(
+			handle,
+			self,
+			contentType.cString(using: .utf8),
+			fileURL.path.cString(using: .utf8),
+			partName.cString(using: .utf8),
+			boundary?.cString(using: .utf8)
+		)
+		guard result.tag == StringResult_Ok else {
+			let message = result.failed.map { String(cString: $0) } ?? ""
+			result.failed.map { pactffi_string_delete($0) }
+			throw PactInteraction.Error.invalidBody(message)
+		}
+	}
 }
