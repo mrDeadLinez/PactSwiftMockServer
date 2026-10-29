@@ -34,6 +34,8 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     @discardableResult
     public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
     @discardableResult
+    public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
+    @discardableResult
     public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
   }
   public struct Response : PactSwiftMockServer::HeaderBuilder, PactSwiftMockServer::BodyBuilder {
@@ -47,6 +49,8 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     public func body(_ body: Swift::String? = nil, contentType: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
+    @discardableResult
+    public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
   }
@@ -127,6 +131,8 @@ public protocol BodyBuilder {
   func body(_ body: Swift::String?, contentType: Swift::String?) throws -> Self
   @discardableResult
   func body(_ body: Foundation::Data, contentType: Swift::String) throws -> Self
+  @discardableResult
+  func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> Self
 }
 public class MockServer {
   public enum Error : Swift::Equatable {
@@ -138,7 +144,7 @@ public class MockServer {
     case invalidAddress
     case tlsConfigFailure
   }
-  public enum TransferProtocol : Swift::Int {
+  public enum TransferProtocol : Swift::Int, Swift::Sendable {
     case standard
     case secure
     public init?(rawValue: Swift::Int)
@@ -147,13 +153,19 @@ public class MockServer {
       get
     }
   }
+  public struct Configuration : Swift::Equatable, Swift::Sendable {
+    public var corsPreflight: Swift::Bool
+    public var keepAlive: Swift::Bool
+    public init(corsPreflight: Swift::Bool = false, keepAlive: Swift::Bool = true)
+    public static func == (a: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration, b: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration) -> Swift::Bool
+  }
   public var baseUrl: Foundation::URL {
     get
   }
   public var port: Swift::Int32 {
     get
   }
-  public init(pact: PactSwiftMockServer::Pact, transferProtocol: PactSwiftMockServer::MockServer.PactSwiftMockServer::TransferProtocol = .standard, port: Swift::Int32? = nil) throws
+  public init(pact: PactSwiftMockServer::Pact, transferProtocol: PactSwiftMockServer::MockServer.PactSwiftMockServer::TransferProtocol = .standard, port: Swift::Int32? = nil, configuration: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration = Configuration()) throws
   public var tlsCACertificate: Swift::String? {
     get
   }
@@ -193,8 +205,17 @@ public struct ProviderVerificationOptions : Swift::Equatable {
     public var name: Swift::String?
     public var url: Foundation::URL?
     public var port: Swift::Int
-    public init(name: Swift::String? = nil, url: Foundation::URL? = nil, port: Swift::Int)
+    public var transports: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Transport]
+    public init(name: Swift::String? = nil, url: Foundation::URL? = nil, port: Swift::Int, transports: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Transport] = [])
     public static func == (a: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider, b: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider) -> Swift::Bool
+  }
+  public struct Transport : Swift::Equatable {
+    public var `protocol`: Swift::String
+    public var port: Swift::Int
+    public var path: Swift::String?
+    public var scheme: Swift::String?
+    public init(protocol: Swift::String, port: Swift::Int, path: Swift::String? = nil, scheme: Swift::String? = nil)
+    public static func == (a: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Transport, b: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Transport) -> Swift::Bool
   }
   public enum Authentication : Swift::Equatable {
     case basic(username: Swift::String, password: Swift::String)
@@ -207,8 +228,9 @@ public struct ProviderVerificationOptions : Swift::Equatable {
     public var enablePending: Swift::Bool
     public var includeWIPPactsSince: Swift::String?
     public var providerTags: [Swift::String]
+    public var providerBranch: Swift::String?
     public var consumerVersionSelectors: [Swift::String]
-    public init(url: Swift::String, authentication: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Authentication? = nil, enablePending: Swift::Bool = false, includeWIPPactsSince: Swift::String? = nil, providerTags: [Swift::String] = [], consumerVersionSelectors: [Swift::String] = [])
+    public init(url: Swift::String, authentication: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Authentication? = nil, enablePending: Swift::Bool = false, includeWIPPactsSince: Swift::String? = nil, providerTags: [Swift::String] = [], providerBranch: Swift::String? = nil, consumerVersionSelectors: [Swift::String] = [])
     public static func == (a: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Broker, b: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Broker) -> Swift::Bool
   }
   public enum Source : Swift::Equatable {
@@ -228,7 +250,9 @@ public struct ProviderVerificationOptions : Swift::Equatable {
   public struct Publish : Swift::Equatable {
     public var providerVersion: Swift::String
     public var providerTags: [Swift::String]
-    public init(providerVersion: Swift::String, providerTags: [Swift::String] = [])
+    public var providerBranch: Swift::String?
+    public var buildURL: Foundation::URL?
+    public init(providerVersion: Swift::String, providerTags: [Swift::String] = [], providerBranch: Swift::String? = nil, buildURL: Foundation::URL? = nil)
     public static func == (a: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish, b: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish) -> Swift::Bool
   }
   public var provider: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider
@@ -236,8 +260,14 @@ public struct ProviderVerificationOptions : Swift::Equatable {
   public var filter: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Filter?
   public var consumers: [Swift::String]
   public var stateChangeURL: Foundation::URL?
+  public var stateChangeTeardown: Swift::Bool
+  public var stateChangeAsQuery: Swift::Bool
   public var publish: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish?
-  public init(provider: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider, sources: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source], filter: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Filter? = nil, consumers: [Swift::String] = [], stateChangeURL: Foundation::URL? = nil, publish: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish? = nil)
+  public var customHeaders: [Swift::String : Swift::String]
+  public var disableSSLVerification: Swift::Bool
+  public var requestTimeout: Swift::Int?
+  public var followRedirects: Swift::Bool?
+  public init(provider: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider, sources: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source], filter: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Filter? = nil, consumers: [Swift::String] = [], stateChangeURL: Foundation::URL? = nil, stateChangeTeardown: Swift::Bool = false, stateChangeAsQuery: Swift::Bool = false, publish: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish? = nil, customHeaders: [Swift::String : Swift::String] = [:], disableSSLVerification: Swift::Bool = false, requestTimeout: Swift::Int? = nil, followRedirects: Swift::Bool? = nil)
   public static func == (a: PactSwiftMockServer::ProviderVerificationOptions, b: PactSwiftMockServer::ProviderVerificationOptions) -> Swift::Bool
 }
 final public class PactBuilder {
@@ -250,7 +280,9 @@ final public class PactBuilder {
   }
   public struct Config : Swift::Sendable {
     public let pactDirectory: Swift::String
-    public init(pactDirectory: Swift::String)
+    public let transferProtocol: PactSwiftMockServer::MockServer.PactSwiftMockServer::TransferProtocol
+    public let mockServer: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration
+    public init(pactDirectory: Swift::String, transferProtocol: PactSwiftMockServer::MockServer.PactSwiftMockServer::TransferProtocol = .standard, mockServer: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration = MockServer.Configuration())
   }
   public init(pact: PactSwiftMockServer::Pact, config: PactSwiftMockServer::PactBuilder.PactSwiftMockServer::Config)
   final public func uponReceiving(_ description: Swift::String) -> PactSwiftMockServer::Interaction
@@ -444,6 +476,8 @@ public struct MessagePart : PactSwiftMockServer::BodyBuilder, PactSwiftMockServe
   @discardableResult
   public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::MessagePart
   @discardableResult
+  public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::MessagePart
+  @discardableResult
   public func metadata(_ name: Swift::String, json: Swift::String) throws -> PactSwiftMockServer::MessagePart
 }
 @_hasMissingDesignatedInitializers final public class AsynchronousMessage : PactSwiftMockServer::PactInteraction, PactSwiftMockServer::BodyBuilder, PactSwiftMockServer::MetadataBuilder {
@@ -451,6 +485,8 @@ public struct MessagePart : PactSwiftMockServer::BodyBuilder, PactSwiftMockServe
   final public func body(_ body: Swift::String?, contentType: Swift::String?) throws -> Self
   @discardableResult
   final public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> Self
+  @discardableResult
+  final public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> Self
   @discardableResult
   final public func metadata(_ name: Swift::String, json: Swift::String) throws -> Self
   @objc deinit
