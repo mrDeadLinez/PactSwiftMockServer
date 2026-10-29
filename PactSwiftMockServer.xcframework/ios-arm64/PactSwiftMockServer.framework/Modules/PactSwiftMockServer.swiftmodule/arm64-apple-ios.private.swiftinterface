@@ -36,6 +36,8 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     @discardableResult
     public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
     @discardableResult
+    public func pluginContents(_ json: Swift::String, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
+    @discardableResult
     public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Request
   }
   public struct Response : PactSwiftMockServer::HeaderBuilder, PactSwiftMockServer::BodyBuilder {
@@ -51,6 +53,8 @@ public enum ProviderVerificationError : Swift::Error, Swift::Equatable {
     public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
+    @discardableResult
+    public func pluginContents(_ json: Swift::String, contentType: Swift::String) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
     @discardableResult
     public func multipartBody(contentsOf fileURL: Foundation::URL, contentType: Swift::String, partName: Swift::String, boundary: Swift::String? = nil) throws -> PactSwiftMockServer::Interaction.PactSwiftMockServer::Response
   }
@@ -133,6 +137,8 @@ public protocol BodyBuilder {
   func body(_ body: Foundation::Data, contentType: Swift::String) throws -> Self
   @discardableResult
   func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> Self
+  @discardableResult
+  func pluginContents(_ json: Swift::String, contentType: Swift::String) throws -> Self
 }
 public class MockServer {
   public enum Error : Swift::Equatable {
@@ -156,7 +162,8 @@ public class MockServer {
   public struct Configuration : Swift::Equatable, Swift::Sendable {
     public var corsPreflight: Swift::Bool
     public var keepAlive: Swift::Bool
-    public init(corsPreflight: Swift::Bool = false, keepAlive: Swift::Bool = true)
+    public var transport: Swift::String?
+    public init(corsPreflight: Swift::Bool = false, keepAlive: Swift::Bool = true, transport: Swift::String? = nil)
     public static func == (a: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration, b: PactSwiftMockServer::MockServer.PactSwiftMockServer::Configuration) -> Swift::Bool
   }
   public var baseUrl: Foundation::URL {
@@ -236,7 +243,7 @@ public struct ProviderVerificationOptions : Swift::Equatable {
   public enum Source : Swift::Equatable {
     case directory(Swift::String)
     case file(Swift::String)
-    case url(Foundation::URL)
+    case url(Foundation::URL, authentication: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Authentication? = nil)
     case broker(PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Broker)
     public static func == (a: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source, b: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source) -> Swift::Bool
   }
@@ -267,12 +274,16 @@ public struct ProviderVerificationOptions : Swift::Equatable {
   public var disableSSLVerification: Swift::Bool
   public var requestTimeout: Swift::Int?
   public var followRedirects: Swift::Bool?
-  public init(provider: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider, sources: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source], filter: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Filter? = nil, consumers: [Swift::String] = [], stateChangeURL: Foundation::URL? = nil, stateChangeTeardown: Swift::Bool = false, stateChangeAsQuery: Swift::Bool = false, publish: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish? = nil, customHeaders: [Swift::String : Swift::String] = [:], disableSSLVerification: Swift::Bool = false, requestTimeout: Swift::Int? = nil, followRedirects: Swift::Bool? = nil)
+  public var noPactsIsError: Swift::Bool?
+  public var colouredOutput: Swift::Bool?
+  public var jsonReportURL: Foundation::URL?
+  public init(provider: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Provider, sources: [PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Source], filter: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Filter? = nil, consumers: [Swift::String] = [], stateChangeURL: Foundation::URL? = nil, stateChangeTeardown: Swift::Bool = false, stateChangeAsQuery: Swift::Bool = false, publish: PactSwiftMockServer::ProviderVerificationOptions.PactSwiftMockServer::Publish? = nil, customHeaders: [Swift::String : Swift::String] = [:], disableSSLVerification: Swift::Bool = false, requestTimeout: Swift::Int? = nil, followRedirects: Swift::Bool? = nil, noPactsIsError: Swift::Bool? = nil, colouredOutput: Swift::Bool? = nil, jsonReportURL: Foundation::URL? = nil)
   public static func == (a: PactSwiftMockServer::ProviderVerificationOptions, b: PactSwiftMockServer::ProviderVerificationOptions) -> Swift::Bool
 }
 final public class PactBuilder {
   public enum Error {
     case pactFailure([PactSwiftMockServer::PactVerificationFailure])
+    case messageMismatch([Swift::String])
   }
   public struct ConsumerContext : Swift::Sendable {
     public let mockServerURL: Foundation::URL
@@ -292,6 +303,8 @@ final public class PactBuilder {
   final public func verify(_ message: PactSwiftMockServer::AsynchronousMessage, handler: @Sendable (PactSwiftMockServer::MessageContents) async throws -> Swift::Void) async throws
   final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, handler: (PactSwiftMockServer::SynchronousMessageContents) throws -> Swift::Void) throws
   final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, handler: @Sendable (PactSwiftMockServer::SynchronousMessageContents) async throws -> Swift::Void) async throws
+  final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, respondingWith handler: (PactSwiftMockServer::MessageContents) throws -> PactSwiftMockServer::MessageContents) throws
+  final public func verify(_ message: PactSwiftMockServer::SynchronousMessage, respondingWith handler: @Sendable (PactSwiftMockServer::MessageContents) async throws -> PactSwiftMockServer::MessageContents) async throws
   final public func verify(handler: (PactSwiftMockServer::PactBuilder.PactSwiftMockServer::ConsumerContext) throws -> Swift::Void) throws
   final public func verify(handler: @Sendable (PactSwiftMockServer::PactBuilder.PactSwiftMockServer::ConsumerContext) async throws -> Swift::Void) async throws
   @objc deinit
@@ -313,6 +326,7 @@ final public class Pact {
   public enum Error {
     case canNotBeModified
     case canNotWritePact(Swift::Int32)
+    case canNotLoadPlugin(Swift::String, Swift::String?)
   }
   public static var version: Swift::String {
     get
@@ -326,6 +340,8 @@ final public class Pact {
   @objc deinit
   final public func withSpecification(_ specification: PactSwiftMockServer::Pact.PactSwiftMockServer::Specification) throws -> Self
   final public func withMetadata(namespace: Swift::String, name: Swift::String, value: Swift::String) throws -> Self
+  @discardableResult
+  final public func usingPlugin(_ name: Swift::String, version: Swift::String? = nil) throws -> Self
   final public func writePactFile(directory: Swift::String? = nil, overwrite: Swift::Bool = false) throws
 }
 extension PactSwiftMockServer::Pact.PactSwiftMockServer::Error : Foundation::LocalizedError {
@@ -478,6 +494,8 @@ public struct MessagePart : PactSwiftMockServer::BodyBuilder, PactSwiftMockServe
   @discardableResult
   public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> PactSwiftMockServer::MessagePart
   @discardableResult
+  public func pluginContents(_ json: Swift::String, contentType: Swift::String) throws -> PactSwiftMockServer::MessagePart
+  @discardableResult
   public func metadata(_ name: Swift::String, json: Swift::String) throws -> PactSwiftMockServer::MessagePart
 }
 @_hasMissingDesignatedInitializers final public class AsynchronousMessage : PactSwiftMockServer::PactInteraction, PactSwiftMockServer::BodyBuilder, PactSwiftMockServer::MetadataBuilder {
@@ -487,6 +505,8 @@ public struct MessagePart : PactSwiftMockServer::BodyBuilder, PactSwiftMockServe
   final public func body(_ body: Foundation::Data, contentType: Swift::String) throws -> Self
   @discardableResult
   final public func body(_ body: Foundation::Data, matchingContentType contentType: Swift::String) throws -> Self
+  @discardableResult
+  final public func pluginContents(_ json: Swift::String, contentType: Swift::String) throws -> Self
   @discardableResult
   final public func metadata(_ name: Swift::String, json: Swift::String) throws -> Self
   @objc deinit

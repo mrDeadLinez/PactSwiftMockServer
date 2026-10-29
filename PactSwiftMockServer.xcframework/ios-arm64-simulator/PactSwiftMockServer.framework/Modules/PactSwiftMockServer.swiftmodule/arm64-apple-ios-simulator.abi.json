@@ -2482,6 +2482,41 @@
               },
               {
                 "kind": "Function",
+                "name": "pluginContents",
+                "printedName": "pluginContents(_:contentType:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Request",
+                    "printedName": "PactSwiftMockServer.Interaction.Request",
+                    "usr": "s:19PactSwiftMockServer11InteractionC7RequestV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Func",
+                "usr": "s:19PactSwiftMockServer11InteractionC7RequestV14pluginContents_11contentTypeAESS_SStKF",
+                "mangledName": "$s19PactSwiftMockServer11InteractionC7RequestV14pluginContents_11contentTypeAESS_SStKF",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "AccessControl",
+                  "DiscardableResult"
+                ],
+                "throwing": true,
+                "funcSelfKind": "NonMutating"
+              },
+              {
+                "kind": "Function",
                 "name": "multipartBody",
                 "printedName": "multipartBody(contentsOf:contentType:partName:boundary:)",
                 "children": [
@@ -2808,6 +2843,41 @@
                 "declKind": "Func",
                 "usr": "s:19PactSwiftMockServer11InteractionC8ResponseV4body_19matchingContentTypeAE10Foundation4DataV_SStKF",
                 "mangledName": "$s19PactSwiftMockServer11InteractionC8ResponseV4body_19matchingContentTypeAE10Foundation4DataV_SStKF",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "AccessControl",
+                  "DiscardableResult"
+                ],
+                "throwing": true,
+                "funcSelfKind": "NonMutating"
+              },
+              {
+                "kind": "Function",
+                "name": "pluginContents",
+                "printedName": "pluginContents(_:contentType:)",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Response",
+                    "printedName": "PactSwiftMockServer.Interaction.Response",
+                    "usr": "s:19PactSwiftMockServer11InteractionC8ResponseV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Func",
+                "usr": "s:19PactSwiftMockServer11InteractionC8ResponseV14pluginContents_11contentTypeAESS_SStKF",
+                "mangledName": "$s19PactSwiftMockServer11InteractionC8ResponseV14pluginContents_11contentTypeAESS_SStKF",
                 "moduleName": "PactSwiftMockServer",
                 "declAttributes": [
                   "AccessControl",
@@ -6013,12 +6083,12 @@
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "(PactSwiftMockServer.ProviderVerificationOptions.Source.Type) -> (Foundation.URL) -> PactSwiftMockServer.ProviderVerificationOptions.Source",
+                    "printedName": "(PactSwiftMockServer.ProviderVerificationOptions.Source.Type) -> (Foundation.URL, PactSwiftMockServer.ProviderVerificationOptions.Authentication?) -> PactSwiftMockServer.ProviderVerificationOptions.Source",
                     "children": [
                       {
                         "kind": "TypeFunc",
                         "name": "Function",
-                        "printedName": "(Foundation.URL) -> PactSwiftMockServer.ProviderVerificationOptions.Source",
+                        "printedName": "(Foundation.URL, PactSwiftMockServer.ProviderVerificationOptions.Authentication?) -> PactSwiftMockServer.ProviderVerificationOptions.Source",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -6028,9 +6098,30 @@
                           },
                           {
                             "kind": "TypeNominal",
-                            "name": "URL",
-                            "printedName": "Foundation.URL",
-                            "usr": "s:10Foundation3URLV"
+                            "name": "Tuple",
+                            "printedName": "(Foundation.URL, authentication: PactSwiftMockServer.ProviderVerificationOptions.Authentication?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "URL",
+                                "printedName": "Foundation.URL",
+                                "usr": "s:10Foundation3URLV"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "PactSwiftMockServer.ProviderVerificationOptions.Authentication?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Authentication",
+                                    "printedName": "PactSwiftMockServer.ProviderVerificationOptions.Authentication",
+                                    "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14AuthenticationO"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -6051,8 +6142,8 @@
                   }
                 ],
                 "declKind": "EnumElement",
-                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV6SourceO3urlyAE10Foundation3URLVcAEmF",
-                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV6SourceO3urlyAE10Foundation3URLVcAEmF",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV6SourceO3urlyAE10Foundation3URLV_AC14AuthenticationOSgtcAEmF",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV6SourceO3urlyAE10Foundation3URLV_AC14AuthenticationOSgtcAEmF",
                 "moduleName": "PactSwiftMockServer"
               },
               {
@@ -8408,9 +8499,342 @@
             ]
           },
           {
+            "kind": "Var",
+            "name": "noPactsIsError",
+            "printedName": "noPactsIsError",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Bool?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvp",
+            "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvp",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Bool?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvg",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvg",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Bool?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvs",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvs",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvM",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14noPactsIsErrorSbSgvM",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "colouredOutput",
+            "printedName": "colouredOutput",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Bool?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvp",
+            "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvp",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Bool?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvg",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvg",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Bool?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvs",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvs",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvM",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV14colouredOutputSbSgvM",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "jsonReportURL",
+            "printedName": "jsonReportURL",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvp",
+            "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvp",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvg",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvg",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvs",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvs",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvM",
+                "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV13jsonReportURL10Foundation0J0VSgvM",
+                "moduleName": "PactSwiftMockServer",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
             "kind": "Constructor",
             "name": "init",
-            "printedName": "init(provider:sources:filter:consumers:stateChangeURL:stateChangeTeardown:stateChangeAsQuery:publish:customHeaders:disableSSLVerification:requestTimeout:followRedirects:)",
+            "printedName": "init(provider:sources:filter:consumers:stateChangeURL:stateChangeTeardown:stateChangeAsQuery:publish:customHeaders:disableSSLVerification:requestTimeout:followRedirects:noPactsIsError:colouredOutput:jsonReportURL:)",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -8569,11 +8993,56 @@
                 ],
                 "hasDefaultArg": true,
                 "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Bool?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Bool?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
               }
             ],
             "declKind": "Constructor",
-            "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV8provider7sources6filter9consumers14stateChangeURL0lM8Teardown0lM7AsQuery7publish13customHeaders22disableSSLVerification14requestTimeout15followRedirectsA2C0E0V_SayAC6SourceOGAC6FilterVSgSaySSG10Foundation0N0VSgS2bAC7PublishVSgSDyS2SGSbSiSgSbSgtcfc",
-            "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV8provider7sources6filter9consumers14stateChangeURL0lM8Teardown0lM7AsQuery7publish13customHeaders22disableSSLVerification14requestTimeout15followRedirectsA2C0E0V_SayAC6SourceOGAC6FilterVSgSaySSG10Foundation0N0VSgS2bAC7PublishVSgSDyS2SGSbSiSgSbSgtcfc",
+            "usr": "s:19PactSwiftMockServer27ProviderVerificationOptionsV8provider7sources6filter9consumers14stateChangeURL0lM8Teardown0lM7AsQuery7publish13customHeaders22disableSSLVerification14requestTimeout15followRedirects14noPactsIsError14colouredOutput010jsonReportN0A2C0E0V_SayAC6SourceOGAC6FilterVSgSaySSG10Foundation0N0VSgS2bAC7PublishVSgSDyS2SGSbSiSgSbSgA9_A9_A3_tcfc",
+            "mangledName": "$s19PactSwiftMockServer27ProviderVerificationOptionsV8provider7sources6filter9consumers14stateChangeURL0lM8Teardown0lM7AsQuery7publish13customHeaders22disableSSLVerification14requestTimeout15followRedirects14noPactsIsError14colouredOutput010jsonReportN0A2C0E0V_SayAC6SourceOGAC6FilterVSgSaySSG10Foundation0N0VSgS2bAC7PublishVSgSDyS2SGSbSiSgSbSgA9_A9_A3_tcfc",
             "moduleName": "PactSwiftMockServer",
             "declAttributes": [
               "AccessControl"
@@ -8789,6 +9258,44 @@
             "throwing": true,
             "reqNewWitnessTableEntry": true,
             "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "pluginContents",
+            "printedName": "pluginContents(_:contentType:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer11BodyBuilderP14pluginContents_11contentTypexSS_SStKF",
+            "mangledName": "$s19PactSwiftMockServer11BodyBuilderP14pluginContents_11contentTypexSS_SStKF",
+            "moduleName": "PactSwiftMockServer",
+            "genericSig": "<τ_0_0 where τ_0_0 : PactSwiftMockServer.BodyBuilder>",
+            "sugared_genericSig": "<Self where Self : PactSwiftMockServer.BodyBuilder>",
+            "protocolReq": true,
+            "declAttributes": [
+              "DiscardableResult",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Protocol",
@@ -8891,6 +9398,67 @@
                 "declKind": "EnumElement",
                 "usr": "s:19PactSwiftMockServer0A7BuilderC5ErrorO11pactFailureyAESayAA0a12VerificationH0VGcAEmF",
                 "mangledName": "$s19PactSwiftMockServer0A7BuilderC5ErrorO11pactFailureyAESayAA0a12VerificationH0VGcAEmF",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "messageMismatch",
+                "printedName": "messageMismatch",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.PactBuilder.Error.Type) -> ([Swift.String]) -> PactSwiftMockServer.PactBuilder.Error",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([Swift.String]) -> PactSwiftMockServer.PactBuilder.Error",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.PactBuilder.Error",
+                            "usr": "s:19PactSwiftMockServer0A7BuilderC5ErrorO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[Swift.String]",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              }
+                            ],
+                            "usr": "s:Sa"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.PactBuilder.Error.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.PactBuilder.Error",
+                            "usr": "s:19PactSwiftMockServer0A7BuilderC5ErrorO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer0A7BuilderC5ErrorO15messageMismatchyAESaySSGcAEmF",
+                "mangledName": "$s19PactSwiftMockServer0A7BuilderC5ErrorO15messageMismatchyAESaySSGcAEmF",
                 "moduleName": "PactSwiftMockServer",
                 "declAttributes": [
                   "RawDocComment"
@@ -9654,6 +10222,108 @@
             "declKind": "Func",
             "usr": "s:19PactSwiftMockServer0A7BuilderC6verify_7handleryAA18SynchronousMessageC_yAA0hI8ContentsVYaYbKXEtYaKF",
             "mangledName": "$s19PactSwiftMockServer0A7BuilderC6verify_7handleryAA18SynchronousMessageC_yAA0hI8ContentsVYaYbKXEtYaKF",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "verify",
+            "printedName": "verify(_:respondingWith:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "SynchronousMessage",
+                "printedName": "PactSwiftMockServer.SynchronousMessage",
+                "usr": "s:19PactSwiftMockServer18SynchronousMessageC"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PactSwiftMockServer.MessageContents) throws -> PactSwiftMockServer.MessageContents",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageContents",
+                    "printedName": "PactSwiftMockServer.MessageContents",
+                    "usr": "s:19PactSwiftMockServer15MessageContentsV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageContents",
+                    "printedName": "PactSwiftMockServer.MessageContents",
+                    "usr": "s:19PactSwiftMockServer15MessageContentsV"
+                  }
+                ],
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer0A7BuilderC6verify_14respondingWithyAA18SynchronousMessageC_AA0J8ContentsVAIKXEtKF",
+            "mangledName": "$s19PactSwiftMockServer0A7BuilderC6verify_14respondingWithyAA18SynchronousMessageC_AA0J8ContentsVAIKXEtKF",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "verify",
+            "printedName": "verify(_:respondingWith:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "SynchronousMessage",
+                "printedName": "PactSwiftMockServer.SynchronousMessage",
+                "usr": "s:19PactSwiftMockServer18SynchronousMessageC"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PactSwiftMockServer.MessageContents) async throws -> PactSwiftMockServer.MessageContents",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageContents",
+                    "printedName": "PactSwiftMockServer.MessageContents",
+                    "usr": "s:19PactSwiftMockServer15MessageContentsV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageContents",
+                    "printedName": "PactSwiftMockServer.MessageContents",
+                    "usr": "s:19PactSwiftMockServer15MessageContentsV"
+                  }
+                ],
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer0A7BuilderC6verify_14respondingWithyAA18SynchronousMessageC_AA0J8ContentsVAIYaYbKXEtYaKF",
+            "mangledName": "$s19PactSwiftMockServer0A7BuilderC6verify_14respondingWithyAA18SynchronousMessageC_AA0J8ContentsVAIYaYbKXEtYaKF",
             "moduleName": "PactSwiftMockServer",
             "declAttributes": [
               "Final",
@@ -10685,9 +11355,120 @@
                 ]
               },
               {
+                "kind": "Var",
+                "name": "transport",
+                "printedName": "transport",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvp",
+                "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvp",
+                "moduleName": "PactSwiftMockServer",
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage",
+                  "AccessControl",
+                  "RawDocComment"
+                ],
+                "hasStorage": true,
+                "accessors": [
+                  {
+                    "kind": "Accessor",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvg",
+                    "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvg",
+                    "moduleName": "PactSwiftMockServer",
+                    "implicit": true,
+                    "accessorKind": "get"
+                  },
+                  {
+                    "kind": "Accessor",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvs",
+                    "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvs",
+                    "moduleName": "PactSwiftMockServer",
+                    "implicit": true,
+                    "accessorKind": "set"
+                  },
+                  {
+                    "kind": "Accessor",
+                    "name": "Modify",
+                    "printedName": "Modify()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvM",
+                    "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV9transportSSSgvM",
+                    "moduleName": "PactSwiftMockServer",
+                    "implicit": true,
+                    "accessorKind": "_modify"
+                  }
+                ]
+              },
+              {
                 "kind": "Constructor",
                 "name": "init",
-                "printedName": "init(corsPreflight:keepAlive:)",
+                "printedName": "init(corsPreflight:keepAlive:transport:)",
                 "children": [
                   {
                     "kind": "TypeNominal",
@@ -10708,11 +11489,26 @@
                     "printedName": "Swift.Bool",
                     "hasDefaultArg": true,
                     "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "hasDefaultArg": true,
+                    "usr": "s:Sq"
                   }
                 ],
                 "declKind": "Constructor",
-                "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV13corsPreflight9keepAliveAESb_Sbtcfc",
-                "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV13corsPreflight9keepAliveAESb_Sbtcfc",
+                "usr": "s:19PactSwiftMockServer0cD0C13ConfigurationV13corsPreflight9keepAlive9transportAESb_SbSSSgtcfc",
+                "mangledName": "$s19PactSwiftMockServer0cD0C13ConfigurationV13corsPreflight9keepAlive9transportAESb_SbSSSgtcfc",
                 "moduleName": "PactSwiftMockServer",
                 "declAttributes": [
                   "AccessControl"
@@ -11773,6 +12569,77 @@
               },
               {
                 "kind": "Var",
+                "name": "canNotLoadPlugin",
+                "printedName": "canNotLoadPlugin",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PactSwiftMockServer.Pact.Error.Type) -> (Swift.String, Swift.String?) -> PactSwiftMockServer.Pact.Error",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String, Swift.String?) -> PactSwiftMockServer.Pact.Error",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Pact.Error",
+                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(Swift.String, Swift.String?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "Swift.String?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "String",
+                                    "printedName": "Swift.String",
+                                    "usr": "s:SS"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PactSwiftMockServer.Pact.Error.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "PactSwiftMockServer.Pact.Error",
+                            "usr": "s:19PactSwiftMockServer0A0C5ErrorO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:19PactSwiftMockServer0A0C5ErrorO16canNotLoadPluginyAESS_SSSgtcAEmF",
+                "mangledName": "$s19PactSwiftMockServer0A0C5ErrorO16canNotLoadPluginyAESS_SSSgtcAEmF",
+                "moduleName": "PactSwiftMockServer"
+              },
+              {
+                "kind": "Var",
                 "name": "failureReason",
                 "printedName": "failureReason",
                 "children": [
@@ -12166,6 +13033,51 @@
             "declAttributes": [
               "Final",
               "AccessControl",
+              "RawDocComment"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "usingPlugin",
+            "printedName": "usingPlugin(_:version:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DynamicSelf",
+                "printedName": "Self"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer0A0C11usingPlugin_7versionACXDSS_SSSgtKF",
+            "mangledName": "$s19PactSwiftMockServer0A0C11usingPlugin_7versionACXDSS_SSSgtKF",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "DiscardableResult",
               "RawDocComment"
             ],
             "throwing": true,
@@ -15066,6 +15978,41 @@
           },
           {
             "kind": "Function",
+            "name": "pluginContents",
+            "printedName": "pluginContents(_:contentType:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MessagePart",
+                "printedName": "PactSwiftMockServer.MessagePart",
+                "usr": "s:19PactSwiftMockServer11MessagePartV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer11MessagePartV14pluginContents_11contentTypeACSS_SStKF",
+            "mangledName": "$s19PactSwiftMockServer11MessagePartV14pluginContents_11contentTypeACSS_SStKF",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "AccessControl",
+              "DiscardableResult"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
             "name": "metadata",
             "printedName": "metadata(_:json:)",
             "children": [
@@ -15258,6 +16205,41 @@
             "declKind": "Func",
             "usr": "s:19PactSwiftMockServer19AsynchronousMessageC4body_19matchingContentTypeACXD10Foundation4DataV_SStKF",
             "mangledName": "$s19PactSwiftMockServer19AsynchronousMessageC4body_19matchingContentTypeACXD10Foundation4DataV_SStKF",
+            "moduleName": "PactSwiftMockServer",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "DiscardableResult"
+            ],
+            "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "pluginContents",
+            "printedName": "pluginContents(_:contentType:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DynamicSelf",
+                "printedName": "Self"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:19PactSwiftMockServer19AsynchronousMessageC14pluginContents_11contentTypeACXDSS_SStKF",
+            "mangledName": "$s19PactSwiftMockServer19AsynchronousMessageC14pluginContents_11contentTypeACXDSS_SStKF",
             "moduleName": "PactSwiftMockServer",
             "declAttributes": [
               "Final",
@@ -16734,7 +17716,7 @@
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Interaction.swift",
       "kind": "StringLiteral",
-      "offset": 9098,
+      "offset": 9499,
       "length": 3,
       "value": "\"\/\""
     },
@@ -16832,105 +17814,133 @@
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "IntegerLiteral",
-      "offset": 3912,
+      "offset": 3673,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3677,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "IntegerLiteral",
-      "offset": 4081,
+      "offset": 3801,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3805,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "IntegerLiteral",
-      "offset": 4272,
+      "offset": 4170,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4500,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4691,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 4417,
+      "offset": 4836,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Array",
-      "offset": 5087,
+      "offset": 5506,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 6702,
+      "offset": 7121,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Array",
-      "offset": 6777,
+      "offset": 7196,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Array",
-      "offset": 6855,
+      "offset": 7274,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 7763,
+      "offset": 8221,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Array",
-      "offset": 8210,
+      "offset": 8668,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Array",
-      "offset": 9623,
+      "offset": 10489,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 9687,
+      "offset": 10553,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 9723,
+      "offset": 10589,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "Dictionary",
-      "offset": 9793,
+      "offset": 10659,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Verifier.swift",
       "kind": "BooleanLiteral",
-      "offset": 9831,
+      "offset": 10697,
       "length": 5,
       "value": "false"
     },
@@ -16944,35 +17954,42 @@
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "BooleanLiteral",
-      "offset": 1590,
+      "offset": 1713,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "BooleanLiteral",
-      "offset": 1615,
+      "offset": 1738,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "StringLiteral",
-      "offset": 2096,
+      "offset": 2275,
       "length": 11,
       "value": "\"127.0.0.1\""
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/MockServer.swift",
       "kind": "IntegerLiteral",
-      "offset": 2267,
+      "offset": 2446,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
       "kind": "BooleanLiteral",
-      "offset": 4581,
+      "offset": 1547,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/evghenigorobet\/Developer\/PactSwiftMockServer\/Sources\/Model\/Pact.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5512,
       "length": 5,
       "value": "false"
     },
